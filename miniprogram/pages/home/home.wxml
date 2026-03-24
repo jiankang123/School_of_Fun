@@ -1,0 +1,107 @@
+<!-- pages/home/home.wxml -->
+<view class="page">
+
+  <!-- 头部渐变区 -->
+  <view class="hm-head">
+    <view class="sb"></view>
+    <view class="hm-top">
+      <view class="app-name">⭐ 数学启蒙星球</view>
+      <view class="avatar">🐰</view>
+    </view>
+    <view class="pill-row">
+      <view class="pill">⭐ {{stars}} 颗星</view>
+      <view class="pill">🔥 连续 {{streak}} 天</view>
+    </view>
+    <view class="planet">
+      <text class="planet-ico">🪐</text>
+      <view class="welcome">欢迎回来，小探索家！</view>
+      <view class="today-tip">今日完成 {{doneToday}} / 5 道</view>
+    </view>
+  </view>
+
+  <!-- 签到奖励 -->
+  <view class="streak-c" bindtap="onClaim">
+    <view wx:if="{{!claimed}}">
+      <view class="si-row">
+        <view class="streak-ico">🎁</view>
+        <view class="streak-info">
+          <view class="streak-ttl">今日打卡奖励</view>
+          <view class="streak-sub">每日登录送 20 颗星星！</view>
+        </view>
+        <view class="streak-btn">领取 +20⭐</view>
+      </view>
+    </view>
+    <view wx:else>
+      <view class="si-row">
+        <view class="streak-ico">✅</view>
+        <view class="streak-info">
+          <view class="streak-ttl">今日已签到</view>
+          <view class="streak-sub">明天再来！</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 年龄段选择 -->
+  <view class="sec-hd">选择年龄段</view>
+  <view class="stage-list">
+    <view class="stage-row card" bindtap="goStage" data-sk="starter">
+      <view class="stage-ico-w" style="background:#E8F5E9">🌱</view>
+      <view class="stage-inf">
+        <view class="stage-nm">启蒙班</view>
+        <view class="stage-rg">2–3 岁 · 基础认知</view>
+        <view class="pb"><view class="pf" style="width:{{starterPct}}%;background:#66BB6A"></view></view>
+      </view>
+      <view class="arrow-r">›</view>
+    </view>
+
+    <view class="stage-row card" bindtap="goStage" data-sk="pre">
+      <view class="stage-ico-w" style="background:#FFF9C4">🍎</view>
+      <view class="stage-inf">
+        <view class="stage-nm">学前班</view>
+        <view class="stage-rg">3–5 岁 · 建立数字概念</view>
+        <view class="pb"><view class="pf" style="width:{{prePct}}%;background:#FFB300"></view></view>
+      </view>
+      <view class="arrow-r">›</view>
+    </view>
+
+    <view class="stage-row card" bindtap="goStage" data-sk="kinder">
+      <view class="stage-ico-w" style="background:#E3F2FD">🚂</view>
+      <view class="stage-inf">
+        <view class="stage-nm">幼儿园</view>
+        <view class="stage-rg">5–6 岁 · 基础计算</view>
+        <view class="pb"><view class="pf" style="width:{{kinderPct}}%;background:#4FC3F7"></view></view>
+      </view>
+      <view class="arrow-r">›</view>
+    </view>
+
+    <view class="stage-row card {{grade1Locked ? 'locked-row' : ''}}" bindtap="goGrade1">
+      <view class="stage-ico-w" style="background:#F3E5F5">🏫</view>
+      <view class="stage-inf">
+        <view class="stage-nm">小学一年级</view>
+        <view class="stage-rg">6–7 岁 · 20以内加减法</view>
+        <view class="pb"><view class="pf" style="width:{{grade1Pct}}%;background:#AB47BC"></view></view>
+      </view>
+      <view class="arrow-r">{{grade1Locked ? '🔒' : '›'}}</view>
+    </view>
+  </view>
+
+  <!-- 每日任务 -->
+  <view class="sec-hd">每日任务</view>
+  <view class="daily-c card">
+    <view
+      class="daily-row"
+      wx:for="{{dailyTasks}}"
+      wx:key="index"
+      bindtap="onDailyTap"
+      data-idx="{{index}}"
+      data-done="{{item.done}}"
+    >
+      <view class="dc {{item.done ? 'done' : 'todo'}}">{{item.done ? '✓' : index+1}}</view>
+      <view class="d-nm">{{item.emoji}} {{item.name}}</view>
+      <view class="tag">+10⭐</view>
+    </view>
+  </view>
+
+  <view class="safe"></view>
+</view>

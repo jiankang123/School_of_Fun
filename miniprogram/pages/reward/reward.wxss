@@ -1,0 +1,28 @@
+/* pages/reward/reward.wxss */
+.rw-page {
+  background: linear-gradient(160deg, #FFB300 0%, #FF6F00 100%);
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 80rpx 56rpx;
+}
+.fw { font-size: 128rpx; animation: fw .5s ease infinite alternate; }
+@keyframes fw {
+  from { transform: translateY(0) rotate(-8deg); }
+  to   { transform: translateY(-28rpx) rotate(8deg); }
+}
+.rw-card {
+  background: #fff; border-radius: 64rpx; padding: 56rpx 48rpx;
+  text-align: center; width: 100%; margin: 24rpx 0 40rpx;
+  box-shadow: 0 32rpx 80rpx rgba(0,0,0,.15);
+}
+.rw-ico { font-size: 128rpx; margin-bottom: 16rpx; }
+.rw-ttl { font-size: 52rpx; font-weight: 800; margin-bottom: 8rpx; }
+.rw-sub { font-size: 26rpx; color: #888; margin-bottom: 36rpx; }
+.stars-row { display: flex; justify-content: center; gap: 20rpx; margin-bottom: 28rpx; }
+.rw-star { font-size: 88rpx; color: #E0E0E0; }
+.rw-star.lit { color: #FFB300; animation: starpop .4s cubic-bezier(.34,1.56,.64,1) both; }
+.earn-tag { background: #FFF8E1; color: #FF8F00; font-size: 28rpx; font-weight: 700; padding: 12rpx 40rpx; border-radius: 40rpx; display: inline-block; }
+.rw-btns { display: flex; gap: 20rpx; width: 100%; }
+.rw-ghost { flex: 1; padding: 26rpx 0; background: rgba(255,255,255,.25); border: 4rpx solid rgba(255,255,255,.4); color: #fff; font-size: 30rpx; font-weight: 700; border-radius: 100rpx; text-align: center; }
+.rw-solid { flex: 1; padding: 26rpx 0; background: #fff; color: #FF6F00; font-size: 30rpx; font-weight: 700; border-radius: 100rpx; text-align: center; box-shadow: 0 8rpx 28rpx rgba(0,0,0,.15); }
+.rw-back { font-size: 26rpx; color: rgba(255,255,255,.75); margin-top: 20rpx; text-decoration: underline; }

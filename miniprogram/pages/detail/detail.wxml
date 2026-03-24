@@ -1,0 +1,35 @@
+<!-- pages/detail/detail.wxml -->
+<view class="container">
+
+  <!-- 顶部问题卡片 -->
+  <view class="q-card">
+    <view class="q-meta">
+      <view class="q-num">Q{{item.id}}</view>
+      <view class="q-cat">{{item.cat}}</view>
+    </view>
+    <view class="q-text">{{item.q}}</view>
+  </view>
+
+  <!-- 答案卡片 -->
+  <view class="answer-card">
+    <view class="answer-label">💡 解决方案</view>
+
+    <!-- 正文段落 -->
+    <view wx:if="{{item.a}}" class="answer-text">{{item.a}}</view>
+
+    <!-- 步骤列表 -->
+    <view wx:if="{{item.steps.length > 0}}" class="steps">
+      <view wx:for="{{item.steps}}" wx:key="index" class="step-item">
+        <view class="step-dot">{{index + 1}}</view>
+        <text class="step-text">{{item}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 上下翻页 -->
+  <view class="nav-btns">
+    <view class="nav-btn {{prevId === 0 ? 'disabled' : ''}}" bindtap="goPrev">← 上一题</view>
+    <view class="nav-btn {{nextId === 0 ? 'disabled' : ''}}" bindtap="goNext">下一题 →</view>
+  </view>
+
+</view>

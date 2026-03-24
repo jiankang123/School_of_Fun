@@ -1,0 +1,25 @@
+/* pages/progress/progress.wxss */
+.page { background: #FFF9F0; min-height: 100vh; padding: 0 32rpx 32rpx; }
+.sb { height: 100rpx; }
+.pg-ttl { font-size: 52rpx; font-weight: 800; margin-bottom: 32rpx; }
+
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20rpx; margin-bottom: 8rpx; }
+.stat-c { padding: 36rpx 24rpx; text-align: center; border-radius: 40rpx; }
+.stat-ico { font-size: 64rpx; margin-bottom: 8rpx; }
+.stat-val { font-size: 72rpx; font-weight: 800; }
+.stat-lbl { font-size: 22rpx; color: #AAAAAA; margin-top: 4rpx; }
+
+.sp-list { display: flex; flex-direction: column; gap: 16rpx; }
+.sp-row { display: flex; align-items: center; gap: 24rpx; padding: 28rpx; border-radius: 40rpx; }
+.sp-ico { font-size: 56rpx; flex-shrink: 0; }
+.sp-inf { flex: 1; }
+.sp-nm  { font-size: 28rpx; font-weight: 600; margin-bottom: 8rpx; }
+.sp-pct { font-size: 28rpx; font-weight: 700; color: #AAAAAA; flex-shrink: 0; }
+
+.badge-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16rpx; }
+.badge-c { padding: 28rpx 12rpx; text-align: center; border-radius: 36rpx; }
+.badge-c.locked { opacity: .28; }
+.badge-ico { font-size: 64rpx; margin-bottom: 8rpx; }
+.badge-nm  { font-size: 22rpx; color: #555; font-weight: 500; }
+
+.safe { height: 40rpx; }

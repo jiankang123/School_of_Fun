@@ -1,0 +1,98 @@
+<!-- pages/game/game.wxml -->
+<view class="page">
+
+  <!-- ── 顶部进度栏 ── -->
+  <view class="game-hd">
+    <view class="back-btn" bindtap="goBack">‹</view>
+    <view class="hd-center">
+      <view class="hd-title">{{levelName}}</view>
+      <view class="prog-bar">
+        <view class="prog-fill" style="width:{{progress}}%;background:#FFB300"></view>
+      </view>
+    </view>
+    <view class="lives">
+      <text wx:for="{{livesArr}}" wx:key="index">{{item}}</text>
+    </view>
+  </view>
+
+  <!-- ════════════════════════
+       游戏类型：count（数苹果）
+  ════════════════════════ -->
+  <view class="game-body" wx:if="{{gameType === 'count'}}">
+    <view class="q-label">下面有几个 {{itemEmoji}}？</view>
+
+    <!-- 物品展示区 -->
+    <view class="items-display">
+      <view
+        class="item-dot {{item.counted ? 'counted' : ''}}"
+        wx:for="{{items}}"
+        wx:key="index"
+        bindtap="tapItem"
+        data-index="{{index}}"
+      >{{itemEmoji}}</view>
+    </view>
+
+    <!-- 已数计数 -->
+    <view class="counted-display">
+      <view class="counted-label">已数</view>
+      <view class="counted-num">{{countedNum}}</view>
+    </view>
+
+    <!-- 数字选项 -->
+    <view class="options-grid">
+      <view
+        class="opt-btn {{item.state}}"
+        wx:for="{{options}}"
+        wx:key="index"
+        bindtap="selectOption"
+        data-value="{{item.value}}"
+        data-index="{{index}}"
+      >{{item.value}}</view>
+    </view>
+  </view>
+
+  <!-- ════════════════════════
+       游戏类型：match（连线配对）
+  ════════════════════════ -->
+  <view class="game-body" wx:if="{{gameType === 'match'}}">
+    <view class="q-label">把数字和对应的点点连起来 ✏️</view>
+
+    <view class="match-area">
+      <!-- 左列：数字 -->
+      <view class="match-col">
+        <view
+          class="match-item number-item {{leftSel === index ? 'selected' : ''}} {{item.matched ? 'matched' : ''}}"
+          wx:for="{{matchLeft}}"
+          wx:key="index"
+          bindtap="tapLeft"
+          data-index="{{index}}"
+        >{{item.label}}</view>
+      </view>
+
+      <!-- 连线 canvas -->
+      <canvas
+        type="2d"
+        id="line-canvas"
+        class="line-canvas"
+        bindtouchstart="onCanvasTouch"
+      ></canvas>
+
+      <!-- 右列：点阵 -->
+      <view class="match-col">
+        <view
+          class="match-item dot-item {{rightSel === index ? 'selected' : ''}} {{item.matched ? 'matched' : ''}}"
+          wx:for="{{matchRight}}"
+          wx:key="index"
+          bindtap="tapRight"
+          data-index="{{index}}"
+        >{{item.dots}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ── 答题反馈 Toast ── -->
+  <view class="feedback-toast {{feedbackType}}" wx:if="{{showFeedback}}">
+    <text>{{feedbackText}}</text>
+  </view>
+
+</view>

@@ -1,0 +1,45 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/stage/stage",
+    "pages/game/game",
+    "pages/reward/reward",
+    "pages/progress/progress"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#4FC3F7",
+    "navigationBarTitleText": "数学启蒙星球",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#FFF9F0"
+  },
+  "tabBar": {
+    "color": "#AAAAAA",
+    "selectedColor": "#AB47BC",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/home/home",
+        "text": "主页",
+        "iconPath": "assets/tab_home.png",
+        "selectedIconPath": "assets/tab_home_on.png"
+      },
+      {
+        "pagePath": "pages/stage/stage",
+        "text": "游戏",
+        "iconPath": "assets/tab_game.png",
+        "selectedIconPath": "assets/tab_game_on.png"
+      },
+      {
+        "pagePath": "pages/progress/progress",
+        "text": "进度",
+        "iconPath": "assets/tab_prog.png",
+        "selectedIconPath": "assets/tab_prog_on.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

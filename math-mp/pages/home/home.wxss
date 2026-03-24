@@ -1,0 +1,106 @@
+/* pages/home/home.wxss */
+page { background: #FFF9F0; }
+
+/* ── Header ── */
+.header {
+  background: linear-gradient(160deg, #4FC3F7 0%, #AB47BC 100%);
+  padding: 88rpx 32rpx 40rpx;
+  position: relative; overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  width: 500rpx; height: 500rpx;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.07);
+  top: -200rpx; right: -120rpx;
+}
+.header-top {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+.app-name { font-size: 34rpx; font-weight: 800; color: #fff; }
+.avatar {
+  width: 72rpx; height: 72rpx; border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 40rpx;
+}
+.star-row {
+  display: flex; gap: 16rpx; margin-bottom: 32rpx;
+}
+.star-pill, .streak-pill {
+  background: rgba(255,255,255,0.2);
+  color: #fff; font-size: 24rpx; font-weight: 600;
+  padding: 8rpx 20rpx; border-radius: 40rpx;
+}
+.planet-wrap { text-align: center; padding: 8rpx 0 4rpx; }
+.planet {
+  font-size: 100rpx; line-height: 1;
+  display: block; margin-bottom: 12rpx;
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-16rpx); }
+}
+.welcome { font-size: 36rpx; font-weight: 800; color: #fff; }
+.today-tip { font-size: 26rpx; color: rgba(255,255,255,0.8); margin-top: 6rpx; }
+
+/* ── 签到卡 ── */
+.streak-card {
+  margin: 24rpx 32rpx;
+  background: linear-gradient(135deg, #FFB300, #FF6F00);
+  border-radius: 28rpx; padding: 24rpx 28rpx;
+  display: flex; align-items: center; gap: 20rpx;
+  box-shadow: 0 8rpx 28rpx rgba(255,179,0,0.35);
+}
+.streak-icon { font-size: 56rpx; }
+.streak-info { flex: 1; }
+.streak-title { font-size: 28rpx; font-weight: 700; color: #fff; }
+.streak-sub { font-size: 24rpx; color: rgba(255,255,255,0.8); margin-top: 4rpx; }
+.streak-btn {
+  background: #fff; color: #FF6F00;
+  font-size: 24rpx; font-weight: 700;
+  padding: 12rpx 24rpx; border-radius: 40rpx;
+}
+
+/* ── 阶段列表 ── */
+.stages-list {
+  padding: 0 32rpx; display: flex; flex-direction: column; gap: 20rpx;
+}
+.stage-item {
+  display: flex; align-items: center; gap: 24rpx;
+  padding: 28rpx 28rpx;
+}
+.stage-item:active { opacity: 0.85; }
+.stage-icon-wrap {
+  width: 96rpx; height: 96rpx; border-radius: 28rpx; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.stage-icon-emoji { font-size: 48rpx; }
+.stage-info { flex: 1; min-width: 0; }
+.stage-name { font-size: 30rpx; font-weight: 700; color: #2D2D2D; margin-bottom: 4rpx; }
+.stage-range { font-size: 24rpx; color: #AAAAAA; }
+.stage-right { flex-shrink: 0; }
+.lock-icon { font-size: 36rpx; }
+.arrow { font-size: 40rpx; color: #CCCCCC; }
+
+/* ── 每日任务 ── */
+.daily-card {
+  margin: 0 32rpx;
+  padding: 8rpx 24rpx;
+}
+.daily-row {
+  display: flex; align-items: center; gap: 20rpx;
+  padding: 22rpx 4rpx; border-bottom: 1rpx solid #F5F5F5;
+}
+.daily-row:last-child { border-bottom: none; }
+.daily-check {
+  width: 48rpx; height: 48rpx; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24rpx; font-weight: 700;
+}
+.daily-check.done { background: #66BB6A; color: #fff; }
+.daily-check.todo { background: #F0F0F0; color: #AAAAAA; }
+.daily-name { flex: 1; font-size: 28rpx; color: #2D2D2D; font-weight: 500; }

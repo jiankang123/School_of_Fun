@@ -1,0 +1,44 @@
+/* pages/progress/progress.wxss */
+page { background: #FFF9F0; }
+
+.pg-header { padding: 48rpx 32rpx 8rpx; }
+.pg-title { font-size: 44rpx; font-weight: 800; color: #2D2D2D; }
+
+/* 统计格 */
+.stat-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 16rpx; padding: 24rpx 32rpx;
+}
+.stat-card {
+  padding: 32rpx 20rpx; text-align: center;
+  border-radius: 28rpx;
+}
+.stat-icon { font-size: 52rpx; margin-bottom: 8rpx; }
+.stat-value { font-size: 56rpx; font-weight: 800; color: #2D2D2D; }
+.stat-label { font-size: 24rpx; color: #AAAAAA; margin-top: 4rpx; }
+
+/* 阶段进度 */
+.stage-progs {
+  padding: 0 32rpx; display: flex; flex-direction: column; gap: 16rpx;
+}
+.sp-row {
+  display: flex; align-items: center; gap: 20rpx; padding: 24rpx;
+}
+.sp-emoji { font-size: 44rpx; flex-shrink: 0; }
+.sp-info { flex: 1; }
+.sp-name { font-size: 28rpx; font-weight: 600; color: #2D2D2D; }
+.sp-pct { font-size: 28rpx; font-weight: 700; color: #AAAAAA; flex-shrink: 0; }
+.prog-bar { height: 12rpx; background: #F0F0F0; border-radius: 6rpx; overflow: hidden; }
+.prog-fill { height: 100%; border-radius: 6rpx; transition: width 0.5s; }
+
+/* 徽章 */
+.badge-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 16rpx; padding: 0 32rpx;
+}
+.badge-item {
+  padding: 28rpx 12rpx; text-align: center; border-radius: 24rpx;
+}
+.badge-item.locked { opacity: 0.3; }
+.badge-emoji { font-size: 52rpx; margin-bottom: 8rpx; }
+.badge-name { font-size: 22rpx; color: #555; font-weight: 500; }

@@ -1,0 +1,48 @@
+<!-- pages/stage/stage.wxml -->
+<view class="page">
+
+  <!-- 顶部英雄区 -->
+  <view class="stage-hd" style="background:{{bg}}">
+    <view class="sb"></view>
+    <view class="nav">
+      <view class="nav-back" bindtap="goBack">‹</view>
+      <view class="nav-title">{{title}}</view>
+      <view class="nav-ph"></view>
+    </view>
+    <view class="stage-hero">
+      <text class="stage-big">{{emoji}}</text>
+      <view class="stage-dc">{{desc}}</view>
+      <view class="stage-pr">
+        <view class="pb" style="flex:1">
+          <view class="pf" style="width:{{progPct}}%;background:rgba(255,255,255,.9)"></view>
+        </view>
+        <view class="stage-pl">{{doneCnt}} / {{totalCnt}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 关卡网格 -->
+  <view class="lv-grid">
+    <view
+      class="lv-cell"
+      wx:for="{{levels}}"
+      wx:key="index"
+      bindtap="onLvTap"
+      data-idx="{{index}}"
+      data-locked="{{item.locked}}"
+    >
+      <view class="lv-btn {{item.locked ? 'locked' : ''}}" style="{{item.locked ? '' : 'background:' + item.color}}">
+        <text>{{item.locked ? '🔒' : item.emoji}}</text>
+        <view wx:if="{{item.stars >= 3}}" class="lv-done-badge">★</view>
+      </view>
+      <view class="lv-name">{{item.name}}</view>
+      <view class="lv-stars">
+        <text class="{{item.stars >= 1 ? 'lit' : ''}}">{{item.stars >= 1 ? '★' : '☆'}}</text>
+        <text class="{{item.stars >= 2 ? 'lit' : ''}}">{{item.stars >= 2 ? '★' : '☆'}}</text>
+        <text class="{{item.stars >= 3 ? 'lit' : ''}}">{{item.stars >= 3 ? '★' : '☆'}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="safe"></view>
+</view>

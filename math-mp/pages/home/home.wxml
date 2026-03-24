@@ -1,0 +1,80 @@
+<!-- pages/home/home.wxml -->
+<view class="page">
+
+  <!-- ── 顶部 Header ── -->
+  <view class="header">
+    <view class="header-bg"></view>
+    <view class="header-top">
+      <view class="app-name">⭐ 数学启蒙星球</view>
+      <view class="avatar">🐰</view>
+    </view>
+    <view class="star-row">
+      <view class="star-pill">⭐ {{stars}} 颗星星</view>
+      <view class="streak-pill">🔥 连续 {{streak}} 天</view>
+    </view>
+    <view class="planet-wrap">
+      <view class="planet">🪐</view>
+      <view class="welcome">欢迎回来，小探索家！</view>
+      <view class="today-tip">今日已完成 {{todayDone}} / {{todayTotal}} 道题</view>
+    </view>
+  </view>
+
+  <!-- ── 签到奖励卡 ── -->
+  <view class="streak-card card" wx:if="{{!rewardClaimed}}" bindtap="claimReward">
+    <view class="streak-icon">🎁</view>
+    <view class="streak-info">
+      <view class="streak-title">今日打卡奖励</view>
+      <view class="streak-sub">连续 {{streak}} 天！点击领取</view>
+    </view>
+    <view class="streak-btn">领取 +20⭐</view>
+  </view>
+
+  <!-- ── 阶段列表 ── -->
+  <view class="section-hd">选择年龄段</view>
+  <view class="stages-list">
+    <view
+      class="stage-item card"
+      wx:for="{{stages}}"
+      wx:key="key"
+      bindtap="gotoStage"
+      data-key="{{item.key}}"
+      data-locked="{{item.locked}}"
+    >
+      <view class="stage-icon-wrap" style="background:{{item.iconBg}}">
+        <text class="stage-icon-emoji">{{item.emoji}}</text>
+      </view>
+      <view class="stage-info">
+        <view class="stage-name">{{item.name}}</view>
+        <view class="stage-range">{{item.ageRange}} · {{item.desc}}</view>
+        <view class="prog-bar" style="margin-top:12rpx">
+          <view class="prog-fill" style="width:{{item.pct}}%;background:{{item.color}}"></view>
+        </view>
+      </view>
+      <view class="stage-right">
+        <text wx:if="{{item.locked}}" class="lock-icon">🔒</text>
+        <text wx:else class="arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ── 每日任务 ── -->
+  <view class="section-hd">每日任务</view>
+  <view class="daily-card card">
+    <view
+      class="daily-row"
+      wx:for="{{dailyTasks}}"
+      wx:key="index"
+      bindtap="startTask"
+      data-index="{{index}}"
+    >
+      <view class="daily-check {{item.done ? 'done' : 'todo'}}">
+        <text wx:if="{{item.done}}">✓</text>
+        <text wx:else>{{index + 1}}</text>
+      </view>
+      <view class="daily-name">{{item.name}}</view>
+      <view class="star-tag">+{{item.reward}}⭐</view>
+    </view>
+  </view>
+
+  <view class="safe-bottom"></view>
+</view>

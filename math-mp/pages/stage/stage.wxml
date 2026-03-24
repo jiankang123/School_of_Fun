@@ -1,0 +1,47 @@
+<!-- pages/stage/stage.wxml -->
+<view class="page">
+
+  <!-- ── 顶部 Header ── -->
+  <view class="stage-header" style="background:{{stage.bgGradient}}">
+    <view class="nav-bar">
+      <view class="back-btn" bindtap="goBack">‹</view>
+      <view class="nav-title">{{stage.name}}</view>
+      <view class="nav-placeholder"></view>
+    </view>
+    <view class="stage-hero">
+      <text class="stage-big-emoji">{{stage.emoji}}</text>
+      <view class="stage-desc">{{stage.ageRange}} · {{stage.desc}}</view>
+      <view class="stage-prog-row">
+        <view class="prog-bar" style="flex:1">
+          <view class="prog-fill" style="width:{{pct}}%;background:rgba(255,255,255,0.9)"></view>
+        </view>
+        <view class="prog-label">{{doneCnt}} / {{totalCnt}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ── 关卡网格 ── -->
+  <view class="levels-grid">
+    <view
+      class="level-cell"
+      wx:for="{{levels}}"
+      wx:key="index"
+      bindtap="startLevel"
+      data-index="{{index}}"
+      data-locked="{{item.locked}}"
+    >
+      <view class="level-btn {{item.locked ? 'locked' : 'unlocked'}}" style="{{item.locked ? '' : 'background:' + item.color}}">
+        <text class="level-emoji">{{item.locked ? '🔒' : item.emoji}}</text>
+        <view class="level-done-badge" wx:if="{{item.stars >= 3}}">★</view>
+      </view>
+      <view class="level-name">{{item.name}}</view>
+      <view class="level-stars">
+        <text class="star-item {{item.stars >= 1 ? 'lit' : ''}}">★</text>
+        <text class="star-item {{item.stars >= 2 ? 'lit' : ''}}">★</text>
+        <text class="star-item {{item.stars >= 3 ? 'lit' : ''}}">★</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="safe-bottom"></view>
+</view>

@@ -1,0 +1,55 @@
+<!-- pages/progress/progress.wxml -->
+<view class="page">
+  <view class="sb"></view>
+  <view class="pg-ttl">📊 我的进度</view>
+
+  <!-- 统计格 -->
+  <view class="stat-grid">
+    <view class="stat-c card">
+      <view class="stat-ico">⭐</view>
+      <view class="stat-val">{{stars}}</view>
+      <view class="stat-lbl">累计星星</view>
+    </view>
+    <view class="stat-c card">
+      <view class="stat-ico">🔥</view>
+      <view class="stat-val">{{streak}}</view>
+      <view class="stat-lbl">连续天数</view>
+    </view>
+    <view class="stat-c card">
+      <view class="stat-ico">✅</view>
+      <view class="stat-val">{{doneCnt}}</view>
+      <view class="stat-lbl">完成关卡</view>
+    </view>
+    <view class="stat-c card">
+      <view class="stat-ico">🏅</view>
+      <view class="stat-val">{{totalStars}}</view>
+      <view class="stat-lbl">获得星星</view>
+    </view>
+  </view>
+
+  <!-- 阶段进度 -->
+  <view class="sec-hd" style="padding-left:0">阶段进度</view>
+  <view class="sp-list">
+    <view class="sp-row card" wx:for="{{stages}}" wx:key="sk">
+      <view class="sp-ico">{{item.emoji}}</view>
+      <view class="sp-inf">
+        <view class="sp-nm">{{item.title}}</view>
+        <view class="pb">
+          <view class="pf" style="width:{{item.pct}}%;background:{{item.color}}"></view>
+        </view>
+      </view>
+      <view class="sp-pct">{{item.pct}}%</view>
+    </view>
+  </view>
+
+  <!-- 成就徽章 -->
+  <view class="sec-hd" style="padding-left:0;margin-top:16rpx">成就徽章</view>
+  <view class="badge-grid">
+    <view class="badge-c card {{item.locked ? 'locked' : ''}}" wx:for="{{badges}}" wx:key="name">
+      <view class="badge-ico">{{item.ico}}</view>
+      <view class="badge-nm">{{item.name}}</view>
+    </view>
+  </view>
+
+  <view class="safe"></view>
+</view>

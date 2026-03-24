@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skill 规范</title>
+<style>
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── CSS Variables ── */
+:root {
+  --bg: #FFFFFF;
+  --bg-secondary: #F8F9FA;
+  --text: #1A1A2E;
+  --text-secondary: #555770;
+  --border: #E8E8ED;
+  --accent: #4F46E5;
+  --accent-light: #EEF2FF;
+  --code-bg: #282A36;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-lg: 0 10px 25px rgba(0,0,0,0.08);
+  --radius: 12px;
+  --font-sans: -apple-system, 'PingFang SC', 'Noto Sans SC', 'Helvetica Neue', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', Menlo, monospace;
+}
+
+[data-theme="dark"] {
+  --bg: #0F0F23;
+  --bg-secondary: #1A1A2E;
+  --text: #E8E8ED;
+  --text-secondary: #A0A0B8;
+  --border: #2A2A3E;
+  --accent: #818CF8;
+  --accent-light: #1E1E3A;
+  --code-bg: #16161E;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-lg: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+/* ── Body ── */
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-secondary);
+  color: var(--text);
+  line-height: 1.75;
+  font-size: 16px;
+  transition: background 0.3s, color 0.3s;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Layout ── */
+.layout { display: flex; min-height: 100vh; }
+
+/* ── Sidebar (TOC) ── */
+.sidebar {
+  position: fixed; top: 0; left: 0;
+  width: 280px; height: 100vh;
+  background: var(--bg);
+  border-right: 1px solid var(--border);
+  padding: 24px 0;
+  overflow-y: auto;
+  z-index: 100;
+  transition: transform 0.3s, background 0.3s;
+}
+.sidebar-header {
+  padding: 0 24px 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.sidebar-title {
+  font-size: 14px; font-weight: 700;
+  color: var(--accent); letter-spacing: 0.5px; text-transform: uppercase;
+}
+.theme-toggle {
+  width: 36px; height: 36px;
+  border: 1px solid var(--border); border-radius: 8px;
+  background: var(--bg-secondary); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; transition: all 0.2s;
+}
+.theme-toggle:hover { border-color: var(--accent); }
+
+.toc-list { list-style: none; }
+.toc-list a {
+  display: block; padding: 8px 24px;
+  color: var(--text-secondary); text-decoration: none;
+  font-size: 14px; border-left: 3px solid transparent;
+  transition: all 0.15s;
+}
+.toc-list a:hover { color: var(--accent); background: var(--accent-light); border-left-color: var(--accent); }
+.toc-list .toc-h2 a { padding-left: 36px; font-size: 13px; }
+.toc-list .toc-h3 a { padding-left: 48px; font-size: 12px; }
+
+/* ── Main Content ── */
+.main {
+  margin-left: 280px; flex: 1;
+  padding: 48px 60px; max-width: 900px;
+}
+
+/* ── Mobile Toggle ── */
+.menu-toggle {
+  display: none; position: fixed; top: 16px; left: 16px; z-index: 200;
+  width: 40px; height: 40px; border-radius: 10px;
+  background: var(--bg); border: 1px solid var(--border);
+  box-shadow: var(--shadow); cursor: pointer;
+  align-items: center; justify-content: center; font-size: 20px;
+}
+.overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 90;
+}
+
+/* ── Typography ── */
+h1 { font-size: 2.2em; font-weight: 800; margin: 0.6em 0 0.4em; letter-spacing: -0.5px; color: var(--text); }
+h2 { font-size: 1.5em; font-weight: 700; margin: 1.8em 0 0.6em; padding-bottom: 0.3em; border-bottom: 2px solid var(--border); color: var(--text); }
+h3 { font-size: 1.2em; font-weight: 600; margin: 1.4em 0 0.5em; color: var(--text); }
+h4, h5, h6 { font-size: 1.05em; font-weight: 600; margin: 1.2em 0 0.4em; color: var(--text-secondary); }
+
+p { margin: 0.8em 0; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+strong { font-weight: 700; }
+em { font-style: italic; }
+hr { border: none; border-top: 2px solid var(--border); margin: 2em 0; }
+
+blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-light);
+  padding: 16px 20px;
+  margin: 1em 0;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  color: var(--text-secondary);
+}
+blockquote p { margin: 0.3em 0; }
+
+ul, ol { padding-left: 1.8em; margin: 0.8em 0; }
+li { margin: 0.3em 0; }
+li > ul, li > ol { margin: 0.2em 0; }
+
+/* ── Code ── */
+code {
+  font-family: var(--font-mono);
+  background: var(--accent-light);
+  color: var(--accent);
+  padding: 2px 7px;
+  border-radius: 6px;
+  font-size: 0.88em;
+}
+pre {
+  position: relative;
+  margin: 1.2em 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+pre code {
+  display: block;
+  background: var(--code-bg);
+  color: #F8F8F2;
+  padding: 20px 24px;
+  overflow-x: auto;
+  font-size: 14px;
+  line-height: 1.6;
+  border-radius: var(--radius);
+}
+.highlight pre {
+  background: var(--code-bg);
+  padding: 20px 24px;
+  border-radius: var(--radius);
+  overflow-x: auto;
+  margin: 1.2em 0;
+}
+.highlight code {
+  background: none; color: inherit; padding: 0; border-radius: 0;
+}
+
+/* copy button */
+.copy-btn {
+  position: absolute; top: 10px; right: 12px;
+  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
+  color: #ccc; font-size: 12px; padding: 4px 10px;
+  border-radius: 6px; cursor: pointer; transition: all 0.2s;
+  font-family: var(--font-sans);
+}
+.copy-btn:hover { background: rgba(255,255,255,0.2); color: #fff; }
+.copy-btn.copied { background: #34C759; color: #fff; border-color: #34C759; }
+
+/* ── Table ── */
+table {
+  width: 100%; border-collapse: collapse;
+  margin: 1.2em 0; font-size: 0.92em;
+  border-radius: var(--radius); overflow: hidden;
+  box-shadow: var(--shadow);
+}
+thead { background: var(--accent); color: #fff; }
+th {
+  padding: 12px 16px; text-align: left;
+  font-weight: 600; font-size: 13px; letter-spacing: 0.3px;
+}
+td { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+tbody tr { background: var(--bg); transition: background 0.15s; }
+tbody tr:hover { background: var(--accent-light); }
+
+/* ── Images ── */
+img {
+  max-width: 100%; height: auto;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin: 1em 0;
+}
+
+/* ── Footnotes ── */
+.footnote { font-size: 0.85em; color: var(--text-secondary); margin-top: 3em; border-top: 1px solid var(--border); padding-top: 1em; }
+
+/* ── Admonitions ── */
+.admonition {
+  padding: 16px 20px; margin: 1em 0; border-radius: var(--radius);
+  border-left: 4px solid var(--accent); background: var(--accent-light);
+}
+.admonition-title { font-weight: 700; margin-bottom: 4px; }
+
+/* ── Responsive ── */
+@media (max-width: 860px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); box-shadow: var(--shadow-lg); }
+  .main { margin-left: 0; padding: 32px 20px; padding-top: 72px; }
+  .menu-toggle { display: flex; }
+  .overlay.show { display: block; }
+  table { display: block; overflow-x: auto; }
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ── Pygments (dark) ── */
+pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #49483e }
+.highlight { background: #272822; color: #F8F8F2 }
+.highlight .c { color: #959077 } /* Comment */
+.highlight .err { color: #ED007E; background-color: #1E0010 } /* Error */
+.highlight .esc { color: #F8F8F2 } /* Escape */
+.highlight .g { color: #F8F8F2 } /* Generic */
+.highlight .k { color: #66D9EF } /* Keyword */
+.highlight .l { color: #AE81FF } /* Literal */
+.highlight .n { color: #F8F8F2 } /* Name */
+.highlight .o { color: #FF4689 } /* Operator */
+.highlight .x { color: #F8F8F2 } /* Other */
+.highlight .p { color: #F8F8F2 } /* Punctuation */
+.highlight .ch { color: #959077 } /* Comment.Hashbang */
+.highlight .cm { color: #959077 } /* Comment.Multiline */
+.highlight .cp { color: #959077 } /* Comment.Preproc */
+.highlight .cpf { color: #959077 } /* Comment.PreprocFile */
+.highlight .c1 { color: #959077 } /* Comment.Single */
+.highlight .cs { color: #959077 } /* Comment.Special */
+.highlight .gd { color: #FF4689 } /* Generic.Deleted */
+.highlight .ge { color: #F8F8F2; font-style: italic } /* Generic.Emph */
+.highlight .ges { color: #F8F8F2; font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #F8F8F2 } /* Generic.Error */
+.highlight .gh { color: #F8F8F2 } /* Generic.Heading */
+.highlight .gi { color: #A6E22E } /* Generic.Inserted */
+.highlight .go { color: #66D9EF } /* Generic.Output */
+.highlight .gp { color: #FF4689; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { color: #F8F8F2; font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #959077 } /* Generic.Subheading */
+.highlight .gt { color: #F8F8F2 } /* Generic.Traceback */
+.highlight .kc { color: #66D9EF } /* Keyword.Constant */
+.highlight .kd { color: #66D9EF } /* Keyword.Declaration */
+.highlight .kn { color: #FF4689 } /* Keyword.Namespace */
+.highlight .kp { color: #66D9EF } /* Keyword.Pseudo */
+.highlight .kr { color: #66D9EF } /* Keyword.Reserved */
+.highlight .kt { color: #66D9EF } /* Keyword.Type */
+.highlight .ld { color: #E6DB74 } /* Literal.Date */
+.highlight .m { color: #AE81FF } /* Literal.Number */
+.highlight .s { color: #E6DB74 } /* Literal.String */
+.highlight .na { color: #A6E22E } /* Name.Attribute */
+.highlight .nb { color: #F8F8F2 } /* Name.Builtin */
+.highlight .nc { color: #A6E22E } /* Name.Class */
+.highlight .no { color: #66D9EF } /* Name.Constant */
+.highlight .nd { color: #A6E22E } /* Name.Decorator */
+.highlight .ni { color: #F8F8F2 } /* Name.Entity */
+.highlight .ne { color: #A6E22E } /* Name.Exception */
+.highlight .nf { color: #A6E22E } /* Name.Function */
+.highlight .nl { color: #F8F8F2 } /* Name.Label */
+.highlight .nn { color: #F8F8F2 } /* Name.Namespace */
+.highlight .nx { color: #A6E22E } /* Name.Other */
+.highlight .py { color: #F8F8F2 } /* Name.Property */
+.highlight .nt { color: #FF4689 } /* Name.Tag */
+.highlight .nv { color: #F8F8F2 } /* Name.Variable */
+.highlight .ow { color: #FF4689 } /* Operator.Word */
+.highlight .pm { color: #F8F8F2 } /* Punctuation.Marker */
+.highlight .w { color: #F8F8F2 } /* Text.Whitespace */
+.highlight .mb { color: #AE81FF } /* Literal.Number.Bin */
+.highlight .mf { color: #AE81FF } /* Literal.Number.Float */
+.highlight .mh { color: #AE81FF } /* Literal.Number.Hex */
+.highlight .mi { color: #AE81FF } /* Literal.Number.Integer */
+.highlight .mo { color: #AE81FF } /* Literal.Number.Oct */
+.highlight .sa { color: #E6DB74 } /* Literal.String.Affix */
+.highlight .sb { color: #E6DB74 } /* Literal.String.Backtick */
+.highlight .sc { color: #E6DB74 } /* Literal.String.Char */
+.highlight .dl { color: #E6DB74 } /* Literal.String.Delimiter */
+.highlight .sd { color: #E6DB74 } /* Literal.String.Doc */
+.highlight .s2 { color: #E6DB74 } /* Literal.String.Double */
+.highlight .se { color: #AE81FF } /* Literal.String.Escape */
+.highlight .sh { color: #E6DB74 } /* Literal.String.Heredoc */
+.highlight .si { color: #E6DB74 } /* Literal.String.Interpol */
+.highlight .sx { color: #E6DB74 } /* Literal.String.Other */
+.highlight .sr { color: #E6DB74 } /* Literal.String.Regex */
+.highlight .s1 { color: #E6DB74 } /* Literal.String.Single */
+.highlight .ss { color: #E6DB74 } /* Literal.String.Symbol */
+.highlight .bp { color: #F8F8F2 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #A6E22E } /* Name.Function.Magic */
+.highlight .vc { color: #F8F8F2 } /* Name.Variable.Class */
+.highlight .vg { color: #F8F8F2 } /* Name.Variable.Global */
+.highlight .vi { color: #F8F8F2 } /* Name.Variable.Instance */
+.highlight .vm { color: #F8F8F2 } /* Name.Variable.Magic */
+.highlight .il { color: #AE81FF } /* Literal.Number.Integer.Long */
+</style>
+</head>
+<body>
+
+<button class="menu-toggle" onclick="toggleSidebar()" aria-label="菜单">☰</button>
+<div class="overlay" onclick="toggleSidebar()"></div>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span class="sidebar-title">目录</span>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="切换主题">🌓</button>
+    </div>
+    <div class="toc-list">
+      <div class="toc">
+<ul>
+<li><a href="#skill">Skill 规范</a><ul>
+<li><a href="#skill_1">重要：Skill 存放在工作区内部</a></li>
+<li><a href="#_1">文件结构</a></li>
+<li><a href="#_2">命名规范</a></li>
+<li><a href="#skillmd">SKILL.md 规范</a><ul>
+<li><a href="#_3">前置元数据（必需）</a></li>
+<li><a href="#_4">正文结构</a></li>
+<li><a href="#_5">长度限制与内容指南</a></li>
+</ul>
+</li>
+<li><a href="#skill_2">Skill 创建工作流程</a><ul>
+<li><a href="#_6">测试与评估</a></li>
+</ul>
+</li>
+<li><a href="#_7">增删改查操作</a><ul>
+<li><a href="#_8">创建</a></li>
+<li><a href="#_9">读取</a></li>
+<li><a href="#_10">更新</a></li>
+<li><a href="#_11">删除</a></li>
+<li><a href="#_12">验证</a></li>
+<li><a href="#_13">打包</a></li>
+</ul>
+</li>
+<li><a href="#_14">资源文件</a><ul>
+<li><a href="#scripts">scripts/ 目录</a></li>
+<li><a href="#references">references/ 目录</a></li>
+<li><a href="#assets">assets/ 目录</a></li>
+</ul>
+</li>
+<li><a href="#_15">不应包含的文件</a></li>
+<li><a href="#_16">渐进式展示</a></li>
+<li><a href="#_17">最佳实践</a><ul>
+<li><a href="#_18">编写原则</a></li>
+<li><a href="#_19">编写描述</a></li>
+<li><a href="#_20">编写工作流程</a></li>
+<li><a href="#_21">常用模式</a></li>
+<li><a href="#_22">反模式</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+
+    </div>
+  </nav>
+
+  <article class="main" id="content">
+    <hr />
+<p>name: codebanana-skill-guide
+description: |
+  Skill 开发和管理的完整规范。用于 Skill 的增删改查操作。
+  触发条件：
+  - 创建：&rdquo;创建 skill&rdquo;、&rdquo;新建 skill&rdquo;、&rdquo;初始化 skill&rdquo;
+  - 读取：&rdquo;列出 skills&rdquo;、&rdquo;查看 skills&rdquo;、&rdquo;显示 skill&rdquo;
+  - 更新：&rdquo;更新 skill&rdquo;、&rdquo;编辑 skill&rdquo;、&rdquo;修改 skill&rdquo;
+  - 删除：&rdquo;删除 skill&rdquo;、&rdquo;移除 skill&rdquo;
+  - 验证：&rdquo;验证 skill&rdquo;、&rdquo;检查 skill&rdquo;
+  - 打包：&rdquo;打包 skill&rdquo;、&rdquo;导出 skill&rdquo;</p>
+<hr />
+<h1 id="skill">Skill 规范</h1>
+<h2 id="skill_1">重要：Skill 存放在工作区内部</h2>
+<p><strong>所有 Skill 存储在当前项目工作区的 <code>.codebanana/.skills/</code> 目录中。</strong></p>
+<p><code>&lt;runtime_config&gt;</code> 中的 <code>SKILLS_PATH</code> 指向 <code>.codebanana/.skills/</code>。创建、读取、更新和删除 Skill 时，始终使用此路径（或该变量）。所有文件工具（<code>read_file</code>、<code>write_file</code>、<code>list_dir</code>、<code>run_terminal_cmd</code>）都可以直接访问此目录，因为它是工作区的一部分。</p>
+<p><strong>重要：<code>.codebanana/.skills/</code> 内的 <code>global/</code> 子目录是系统管理的目录，包含预安装的 Skill。切勿在 <code>global/</code> 内创建、修改或删除文件。用户 Skill 必须直接创建在 <code>.codebanana/.skills/</code> 下（例如 <code>.codebanana/.skills/my-skill/SKILL.md</code>）。</strong></p>
+<h2 id="_1">文件结构</h2>
+<div class="highlight"><pre><span></span><code>workspace/.codebanana/.skills/&lt;skill-name&gt;/
+├── SKILL.md              # [必需] 主指令文件
+├── scripts/              # [可选] 可执行脚本
+│   └── <span class="gs">*.py / *</span>.sh
+├── references/           # [可选] 参考文档（按需加载）
+│   └── <span class="gs">*.md</span>
+<span class="gs">└── assets/               # [可选] 输出资源（模板、图片）</span>
+<span class="gs">    └── *</span>
+</code></pre></div>
+
+<h2 id="_2">命名规范</h2>
+<table>
+<thead>
+<tr>
+<th>规则</th>
+<th>正确</th>
+<th>错误</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>小写字母</td>
+<td><code>my-skill</code></td>
+<td><code>My-Skill</code>、<code>MySkill</code></td>
+</tr>
+<tr>
+<td>用连字符分隔</td>
+<td><code>pdf-editor</code></td>
+<td><code>pdf_editor</code>、<code>pdfeditor</code></td>
+</tr>
+<tr>
+<td>不含空格</td>
+<td><code>code-review</code></td>
+<td><code>code review</code></td>
+</tr>
+<tr>
+<td>语义化命名</td>
+<td><code>git-workflow</code></td>
+<td><code>gw</code>、<code>tool1</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="skillmd">SKILL.md 规范</h2>
+<h3 id="_3">前置元数据（必需）</h3>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;skill-name&gt;</span><span class="w">        </span><span class="c1"># 必需：必须与目录名一致</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span><span class="w">            </span><span class="c1"># 必需：触发条件</span>
+<span class="w">  </span><span class="no">Skill 功能的简要描述。</span>
+<span class="w">  </span><span class="no">Triggers: 列出激活此 Skill 的触发短语。</span>
+<span class="nn">---</span>
+</code></pre></div>
+
+<p><strong>要点：</strong>
+- <code>description</code> 决定 Skill 何时被激活
+- 必须包含具体的触发短语
+- 控制在 100 个 token 以内</p>
+<h3 id="_4">正文结构</h3>
+<div class="highlight"><pre><span></span><code><span class="gh"># Skill 标题</span>
+
+<span class="gu">## 概述</span>
+[1-2 句话说明用途]
+
+<span class="gu">## 工作流程</span>
+[核心步骤，编号列表]
+
+<span class="gu">## 参考文件</span>
+[链接到 references/ 中的文件]
+</code></pre></div>
+
+<h3 id="_5">长度限制与内容指南</h3>
+<table>
+<thead>
+<tr>
+<th>组成部分</th>
+<th>限制</th>
+<th>超出时的处理方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SKILL.md 正文</strong></td>
+<td>&lt; 500 行</td>
+<td>将内容拆分到 <code>references/</code> 文件中</td>
+</tr>
+<tr>
+<td><strong>加载内容</strong></td>
+<td>&lt; 5000 词</td>
+<td>核心工作流程放在 SKILL.md，细节移至 references</td>
+</tr>
+<tr>
+<td><strong>元数据（前置信息）</strong></td>
+<td>～100 词</td>
+<td>保持简洁，聚焦触发条件和核心功能</td>
+</tr>
+</tbody>
+</table>
+<p><strong>渐进式展示指南：</strong></p>
+<table>
+<thead>
+<tr>
+<th>指南</th>
+<th>规则</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>引用深度</strong></td>
+<td>只允许 1 层深度</td>
+<td>从 SKILL.md 链接到 <code>references/file.md</code>（不允许嵌套链接）</td>
+</tr>
+<tr>
+<td><strong>长参考文件</strong></td>
+<td>超过 100 行需添加目录</td>
+<td>在文件顶部放置目录，便于快速导航</td>
+</tr>
+<tr>
+<td><strong>大参考文件</strong></td>
+<td>超过 10000 词需提供 grep 模式</td>
+<td>在 SKILL.md 中包含搜索模式，支持定向加载</td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例：大文件的 grep 模式</strong></p>
+<div class="highlight"><pre><span></span><code><span class="gu">## 参考文件</span>
+
+<span class="k">-</span><span class="w"> </span><span class="gs">**API 参考**</span> (references/api.md, 15k 词)
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>认证：grep &quot;auth&quot;
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>速率限制：grep &quot;rate.*limit&quot;
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>接口：grep &quot;GET\\|POST\\|PUT\\|DELETE&quot;
+</code></pre></div>
+
+<h2 id="skill_2">Skill 创建工作流程</h2>
+<p>创建新 Skill 时遵循以下步骤：</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>操作</th>
+<th>详情</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>理解需求</strong></td>
+<td>收集 Skill 使用场景的具体示例</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>规划方案</strong></td>
+<td>确定需要的可复用资源（脚本、参考文档、素材）</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>创建结构</strong></td>
+<td>使用创建操作生成 Skill 结构</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>实现功能</strong></td>
+<td>添加资源文件并编写 SKILL.md 正文</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>测试</strong></td>
+<td>编写 2-3 个真实测试提示词，按顺序运行 Skill，记录输出</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>评估</strong></td>
+<td>将输出与预期结果对照检查 + 收集用户反馈</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>迭代</strong></td>
+<td>根据反馈修复问题，返回步骤 5 直到满意为止</td>
+</tr>
+</tbody>
+</table>
+<p><strong>注意：</strong> 关于验证和打包操作的详细说明，请参见下方的增删改查操作部分。</p>
+<p><strong>快速开始示例：</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 步骤 1-2：理解需求 + 规划方案（人工分析）</span>
+<span class="c1"># 示例：用户需要一个具有旋转/提取功能的 PDF 处理 Skill</span>
+
+<span class="c1"># 步骤 3：创建 Skill 结构</span>
+write_file<span class="o">(</span>
+<span class="w">  </span>operation:<span class="w"> </span><span class="s2">&quot;write&quot;</span>,
+<span class="w">  </span>path:<span class="w"> </span><span class="s2">&quot;.codebanana/.skills/pdf-processor/SKILL.md&quot;</span>,
+<span class="w">  </span>content:<span class="w"> </span><span class="s2">&quot;---\\nname: pdf-processor\\ndescription: |\\n  PDF 处理...\\n---\\n\\n# PDF 处理器\\n...&quot;</span>
+<span class="o">)</span>
+
+<span class="c1"># 步骤 4：实现资源</span>
+write_file<span class="o">(</span>
+<span class="w">  </span>operation:<span class="w"> </span><span class="s2">&quot;write&quot;</span>,
+<span class="w">  </span>path:<span class="w"> </span><span class="s2">&quot;.codebanana/.skills/pdf-processor/scripts/rotate.py&quot;</span>,
+<span class="w">  </span>content:<span class="w"> </span><span class="s2">&quot;#!/usr/bin/env python3\\n# 旋转 PDF 页面\\n...&quot;</span>
+<span class="o">)</span>
+
+<span class="c1"># 步骤 5-7：测试 → 评估 → 迭代</span>
+run_terminal_cmd<span class="o">(</span>
+<span class="w">  </span>command:<span class="w"> </span><span class="s2">&quot;python scripts/validate_skill.py .codebanana/.skills/pdf-processor&quot;</span>
+<span class="o">)</span>
+</code></pre></div>
+
+<h3 id="_6">测试与评估</h3>
+<p>创建 Skill 后（步骤 5-7），在发布前验证其工作是否正常。</p>
+<p><strong>步骤 5 — 编写测试提示词：</strong></p>
+<p>创建 2-3 个真实用户会说的提示词。覆盖主要用例和至少一个边界情况。</p>
+<div class="highlight"><pre><span></span><code>pdf-processor 的测试提示词：
+1. &quot;帮我从 quarterly-report.pdf 中提取所有文本&quot;       （核心功能）
+2. &quot;将我文档的第 3-5 页旋转 90 度&quot;                    （特定参数）
+3. &quot;把这三个 PDF 文件合并成一个&quot;                      （多文件边界情况）
+</code></pre></div>
+
+<p><strong>步骤 6 — 运行并评估：</strong></p>
+<p>使用 Skill 按顺序执行每个测试提示词。每次运行后检查：</p>
+<table>
+<thead>
+<tr>
+<th>检查项</th>
+<th>问题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>正确性</strong></td>
+<td>输出是否符合用户预期？</td>
+</tr>
+<tr>
+<td><strong>完整性</strong></td>
+<td>是否完成了所有请求的操作？</td>
+</tr>
+<tr>
+<td><strong>错误处理</strong></td>
+<td>Skill 能否优雅地处理缺失文件或错误输入？</td>
+</tr>
+<tr>
+<td><strong>效率</strong></td>
+<td>Skill 是否避免了不必要的步骤或冗余的工具调用？</td>
+</tr>
+</tbody>
+</table>
+<p>将输出展示给用户审查。没有反馈表示输出可以接受。</p>
+<p><strong>步骤 7 — 迭代：</strong></p>
+<p>针对发现问题的测试用例进行重点改进。修改 Skill 时：
+- 泛化修复，而不是过度适配特定测试用例
+- 移除对改善输出没有帮助的指令
+- 如果每次测试运行都生成了相同的辅助代码，将其打包为脚本</p>
+<h2 id="_7">增删改查操作</h2>
+<p><strong>重要：</strong> 使用文件工具（<code>write_file</code>、<code>read_file</code>、<code>delete_file</code>、<code>list_dir</code>）进行 Skill 操作。</p>
+<h3 id="_8">创建</h3>
+<p>使用 <code>write_file</code> 工具创建 SKILL.md（目录会自动创建）：</p>
+<div class="highlight"><pre><span></span><code>write_file(
+<span class="w">  </span>operation:<span class="w"> </span>&quot;write&quot;,
+<span class="w">  </span>path:<span class="w"> </span>&quot;<span class="cp">${</span><span class="n">SKILLS_PATH</span><span class="cp">}</span>/<span class="nt">&lt;skill</span><span class="err">-name</span><span class="nt">&gt;</span>/SKILL.md&quot;,
+<span class="w">  </span>content:<span class="w"> </span>&quot;---\\nname:<span class="w"> </span><span class="nt">&lt;skill</span><span class="err">-name</span><span class="nt">&gt;</span>\\ndescription:<span class="w"> </span>|\\n<span class="w">  </span>描述内容。\\n<span class="w">  </span>Triggers:<span class="w"> </span>...\\n---\\n\\n#<span class="w"> </span>Skill<span class="w"> </span>标题\\n\\n##<span class="w"> </span>工作流程\\n...&quot;
+)
+</code></pre></div>
+
+<p>创建后，调用 <code>load_skill</code> 即可立即使用（无需重启）。</p>
+<h3 id="_9">读取</h3>
+<p>使用 <code>list_dir</code> 列出 Skill 目录：</p>
+<div class="highlight"><pre><span></span><code>list_dir(relative_workspace_path:<span class="w"> </span>&quot;<span class="cp">${</span><span class="n">SKILLS_PATH</span><span class="cp">}</span>&quot;)
+</code></pre></div>
+
+<p>使用 <code>read_file</code> 查看 Skill 内容：</p>
+<div class="highlight"><pre><span></span><code>read_file(target_file:<span class="w"> </span>&quot;<span class="cp">${</span><span class="n">SKILLS_PATH</span><span class="cp">}</span>/<span class="nt">&lt;skill</span><span class="err">-name</span><span class="nt">&gt;</span>/SKILL.md&quot;,<span class="w"> </span>should_read_entire_file:<span class="w"> </span>true)
+</code></pre></div>
+
+<h3 id="_10">更新</h3>
+<p>使用 <code>write_file</code> 的 <code>edit</code> 操作：</p>
+<div class="highlight"><pre><span></span><code>write_file(
+<span class="w">  </span>operation:<span class="w"> </span>&quot;edit&quot;,
+<span class="w">  </span>path:<span class="w"> </span>&quot;<span class="cp">${</span><span class="n">SKILLS_PATH</span><span class="cp">}</span>/<span class="nt">&lt;skill</span><span class="err">-name</span><span class="nt">&gt;</span>/SKILL.md&quot;,
+<span class="w">  </span>old_text:<span class="w"> </span>&quot;原始文本&quot;,
+<span class="w">  </span>new_text:<span class="w"> </span>&quot;更新后的文本&quot;
+)
+</code></pre></div>
+
+<p>或使用 <code>write</code> 操作替换整个文件。</p>
+<h3 id="_11">删除</h3>
+<p>使用 <code>delete_file</code> 工具：</p>
+<div class="highlight"><pre><span></span><code>delete_file(target_file:<span class="w"> </span>&quot;<span class="cp">${</span><span class="n">SKILLS_PATH</span><span class="cp">}</span>/<span class="nt">&lt;skill</span><span class="err">-name</span><span class="nt">&gt;</span>/SKILL.md&quot;)
+</code></pre></div>
+
+<p>要删除整个 Skill 目录，需要先删除所有文件。</p>
+<p>⚠️ <strong>警告</strong>：删除操作不可逆。请先与用户确认。</p>
+<h3 id="_12">验证</h3>
+<p>使用 <code>run_terminal_cmd</code> 运行验证脚本：</p>
+<div class="highlight"><pre><span></span><code>run_terminal_cmd(command:<span class="w"> </span>&quot;python<span class="w"> </span><span class="cp">${</span><span class="n">CURRENT_SKILL_PATH</span><span class="cp">}</span>/scripts/validate_skill.py<span class="w"> </span><span class="cp">${</span><span class="n">SKILLS_PATH</span><span class="cp">}</span>/<span class="nt">&lt;skill</span><span class="err">-name</span><span class="nt">&gt;</span>&quot;)
+</code></pre></div>
+
+<p>验证检查项：
+- [ ] SKILL.md 存在
+- [ ] 前置元数据格式正确（name + description）
+- [ ] name 字段与目录名匹配
+- [ ] description 包含触发短语
+- [ ] 行数 &lt; 500</p>
+<h3 id="_13">打包</h3>
+<p>使用 <code>run_terminal_cmd</code> 将 Skill 打包为 ZIP：</p>
+<div class="highlight"><pre><span></span><code><span class="n">run_terminal_cmd</span><span class="p">(</span><span class="nl">command</span><span class="p">:</span><span class="w"> </span><span class="ss">&quot;python ${CURRENT_SKILL_PATH}/scripts/package_skill.py ${SKILLS_PATH}/&lt;skill-name&gt; [output_dir]&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>生成 <code>&lt;skill-name&gt;.skill</code> 文件（ZIP 格式），用于分享。</p>
+<h2 id="_14">资源文件</h2>
+<h3 id="scripts">scripts/ 目录</h3>
+<p>用于需要确定性执行的代码：</p>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env python3</span>
+<span class="sd">&quot;&quot;&quot;脚本描述&quot;&quot;&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># 实现逻辑</span>
+    <span class="k">pass</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</code></pre></div>
+
+<p><strong>要求：</strong>
+- 添加 shebang 行
+- 包含文档字符串
+- 处理命令行参数
+- 创建后进行测试</p>
+<h3 id="references">references/ 目录</h3>
+<p>用于按需加载的参考文档：</p>
+<div class="highlight"><pre><span></span><code><span class="gh"># 参考标题</span>
+
+<span class="gu">## 目录</span>
+<span class="k">-</span><span class="w"> </span>[<span class="nt">章节 1</span>](<span class="na">#章节-1</span>)
+<span class="k">-</span><span class="w"> </span>[<span class="nt">章节 2</span>](<span class="na">#章节-2</span>)
+
+<span class="gu">## 章节 1</span>
+...
+</code></pre></div>
+
+<p><strong>要求：</strong>
+- 超过 100 行的文件需添加目录
+- 在 SKILL.md 中说明何时读取
+- 避免与 SKILL.md 内容重复</p>
+<h3 id="assets">assets/ 目录</h3>
+<p>用于输出资源：
+- 模板（HTML、React 等）
+- 图片、图标
+- 字体文件
+- 示例文档</p>
+<p><strong>注意：</strong> 素材不会加载到上下文中，仅用于输出。</p>
+<h2 id="_15">不应包含的文件</h2>
+<p>❌ README.md
+❌ CHANGELOG.md
+❌ INSTALLATION.md
+❌ 面向人类的文档</p>
+<p>Skill 是为 Agent 服务的，不是为人类服务的。</p>
+<h2 id="_16">渐进式展示</h2>
+<p>三级加载机制：</p>
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>内容</th>
+<th>加载时机</th>
+<th>大小限制</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>name + description</td>
+<td>始终在上下文中</td>
+<td>～100 token</td>
+</tr>
+<tr>
+<td>2</td>
+<td>SKILL.md 正文</td>
+<td>触发 Skill 时</td>
+<td>&lt; 5k token</td>
+</tr>
+<tr>
+<td>3</td>
+<td>references/*</td>
+<td>按需加载</td>
+<td>无限制</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_17">最佳实践</h2>
+<h3 id="_18">编写原则</h3>
+<table>
+<thead>
+<tr>
+<th>原则</th>
+<th>规则</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>简洁优先</strong></td>
+<td>只添加 Agent 不知道的内容；审视每段的 token 开销</td>
+<td>❌ &ldquo;PDF 是一种常见格式&hellip;&rdquo; → ✅ 直接给出代码示例</td>
+</tr>
+<tr>
+<td><strong>使用祈使句</strong></td>
+<td>用直接指令，不用被动描述</td>
+<td>❌ &ldquo;你可以使用&hellip;&rdquo; → ✅ &ldquo;使用 pdfplumber 进行提取&rdquo;</td>
+</tr>
+<tr>
+<td><strong>解释原因</strong></td>
+<td>优先用推理替代僵硬的&rdquo;必须/禁止&rdquo;；帮助 Agent 理解意图</td>
+<td>❌ &ldquo;必须使用 UTC&rdquo; → ✅ &ldquo;使用 UTC 以避免跨区域报告中的时区错误&rdquo;</td>
+</tr>
+<tr>
+<td><strong>自由度匹配脆弱度</strong></td>
+<td>灵活任务给高自由度，脆弱操作给低自由度</td>
+<td>代码审查指南 → 文字说明；数据库迁移 → 精确脚本</td>
+</tr>
+<tr>
+<td><strong>一词一义</strong></td>
+<td>选定一个术语，全程统一使用</td>
+<td>❌ 混用 &ldquo;URL&rdquo;/&rdquo;路由&rdquo;/&rdquo;端点&rdquo; → ✅ 始终使用&rdquo;端点&rdquo;</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_19">编写描述</h3>
+<table>
+<thead>
+<tr>
+<th>规则</th>
+<th>详情</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>做什么 + 何时用</strong></td>
+<td>描述必须涵盖能力和触发场景</td>
+<td>&ldquo;提取/旋转/合并 PDF。处理 .pdf 文件或用户提到 PDF 操作时使用&rdquo;</td>
+</tr>
+<tr>
+<td><strong>第三人称</strong></td>
+<td>描述会注入到系统提示词上下文中</td>
+<td>❌ &ldquo;我可以处理&hellip;&rdquo; → ✅ &ldquo;处理 PDF 文件并生成报告&rdquo;</td>
+</tr>
+<tr>
+<td><strong>具体明确</strong></td>
+<td>包含具体触发词，不用模糊类别</td>
+<td>❌ &ldquo;处理文档&rdquo; → ✅ &ldquo;提取文本、旋转页面、合并/拆分 PDF 文件&rdquo;</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="c1"># ❌ 差的描述</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">处理 PDF 文件</span>
+
+<span class="c1"># ✅ 好的描述</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">  </span><span class="no">PDF 文件处理：提取文本、旋转页面、合并/拆分。</span>
+<span class="w">  </span><span class="no">Triggers:</span>
+<span class="w">  </span><span class="no">- &quot;从 PDF 中提取文本&quot;</span>
+<span class="w">  </span><span class="no">- &quot;旋转 PDF&quot;</span>
+<span class="w">  </span><span class="no">- &quot;合并 PDF&quot;</span>
+<span class="w">  </span><span class="no">- &quot;将 PDF 拆分成页&quot;</span>
+</code></pre></div>
+
+<h3 id="_20">编写工作流程</h3>
+<div class="highlight"><pre><span></span><code><span class="gu">## 工作流程</span>
+
+<span class="k">1.</span> <span class="gs">**分析请求**</span> - 确定需要的具体操作
+<span class="k">2.</span> <span class="gs">**读取文件**</span> - 使用 read_file 获取内容
+<span class="k">3.</span> <span class="gs">**执行操作**</span> - 根据类型调用相应脚本
+<span class="k">4.</span> <span class="gs">**验证结果**</span> - 检查输出是否正确
+<span class="k">5.</span> <span class="gs">**返回结果**</span> - 展示给用户
+</code></pre></div>
+
+<h3 id="_21">常用模式</h3>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>适用场景</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>模板模式</strong></td>
+<td>输出必须遵循固定格式</td>
+<td>提供带 <code>[占位符]</code> 的 Markdown/代码模板</td>
+</tr>
+<tr>
+<td><strong>示例模式</strong></td>
+<td>输出质量依赖于看到输入→输出对</td>
+<td>展示 2-3 个具体的输入/输出示例</td>
+</tr>
+<tr>
+<td><strong>条件模式</strong></td>
+<td>根据上下文有多个路径</td>
+<td>&ldquo;新建？→ 遵循 A。编辑现有？→ 遵循 B&rdquo;</td>
+</tr>
+<tr>
+<td><strong>反馈循环模式</strong></td>
+<td>质量要求高，需要验证</td>
+<td>&ldquo;执行 → 验证 → 失败则修复 → 通过后继续&rdquo;</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_22">反模式</h3>
+<table>
+<thead>
+<tr>
+<th>反模式</th>
+<th>问题</th>
+<th>修复方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>选项太多</strong></td>
+<td>Agent 选择时容易困惑</td>
+<td>提供一个默认方案 + 边界情况的备选方案</td>
+</tr>
+<tr>
+<td><strong>时效性信息</strong></td>
+<td>会过时</td>
+<td>使用&rdquo;当前方法&rdquo;和&rdquo;旧方法（已弃用）&rdquo;分区</td>
+</tr>
+<tr>
+<td><strong>模糊命名</strong></td>
+<td>难以发现和区分</td>
+<td>❌ <code>helper</code>、<code>utils</code> → ✅ <code>pdf-editor</code>、<code>git-workflow</code></td>
+</tr>
+</tbody>
+</table>
+  </article>
+</div>
+
+<script>
+// Theme
+function toggleTheme() {
+  const d = document.documentElement;
+  const next = d.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  d.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+}
+(function() {
+  const saved = localStorage.getItem('theme');
+  if (saved) document.documentElement.setAttribute('data-theme', saved);
+  else if (window.matchMedia('(prefers-color-scheme: dark)').matches)
+    document.documentElement.setAttribute('data-theme', 'dark');
+})();
+
+// Mobile sidebar
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.querySelector('.overlay').classList.toggle('show');
+}
+
+// Copy buttons
+document.querySelectorAll('pre').forEach(pre => {
+  const btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = '复制';
+  btn.addEventListener('click', () => {
+    const code = pre.querySelector('code') || pre;
+    navigator.clipboard.writeText(code.textContent).then(() => {
+      btn.textContent = '已复制 ✓';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = '复制'; btn.classList.remove('copied'); }, 2000);
+    });
+  });
+  pre.style.position = 'relative';
+  pre.appendChild(btn);
+});
+
+// Smooth scroll for TOC links
+document.querySelectorAll('.toc-list a').forEach(a => {
+  a.addEventListener('click', e => {
+    const href = a.getAttribute('href');
+    if (href && href.startsWith('#')) {
+      e.preventDefault();
+      const target = document.getElementById(href.slice(1));
+      if (target) { target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      // close sidebar on mobile
+      document.getElementById('sidebar').classList.remove('open');
+      document.querySelector('.overlay').classList.remove('show');
+    }
+  });
+});
+</script>
+</body>
+</html>

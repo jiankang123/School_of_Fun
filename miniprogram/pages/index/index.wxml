@@ -1,0 +1,241 @@
+<!-- pages/index/index.wxml -->
+<view class="container">
+
+  <!-- Banner -->
+  <view class="banner">
+    <view class="banner-circle1"></view>
+    <view class="banner-circle2"></view>
+    <view class="banner-top">
+      <text class="banner-emoji">🦞</text>
+      <view class="banner-ver">v1.2</view>
+    </view>
+    <view class="banner-title">龙虾宝典</view>
+    <view class="banner-sub">ArkClaw · OpenClaw 完全指南 · 社群共建</view>
+    <view class="banner-stats">
+      <view class="stat-chip">📖 45 个经典 Q&A</view>
+      <view class="stat-chip">🚀 3 种安装方式</view>
+      <view class="stat-chip">🧩 Skills 系统</view>
+    </view>
+  </view>
+
+  <!-- 主 Tab -->
+  <view class="main-tabs">
+    <view
+      wx:for="{{tabs}}" wx:key="key"
+      class="main-tab {{activeTab === item.key ? 'active' : ''}}"
+      bindtap="switchTab"
+      data-key="{{item.key}}"
+    >{{item.label}}</view>
+  </view>
+
+  <!-- ── Tab: 问题速查 ── -->
+  <view wx:if="{{activeTab === 'qa'}}" class="tab-body">
+    <!-- 搜索 -->
+    <view class="search-bar">
+      <view class="search-inner">
+        <text class="search-icon">🔍</text>
+        <input
+          class="search-input"
+          placeholder="搜索关键词：API Key、授权、重启…"
+          placeholder-style="color:#999"
+          value="{{keyword}}"
+          bindinput="onSearch"
+          confirm-type="search"
+        />
+        <view wx:if="{{keyword}}" class="search-clear" bindtap="clearSearch">✕</view>
+      </view>
+    </view>
+
+    <!-- 分类胶囊 -->
+    <scroll-view class="cats-wrap" scroll-x enable-flex>
+      <view
+        wx:for="{{cats}}" wx:key="*this"
+        class="cat-pill {{curCat === item ? 'active' : ''}}"
+        bindtap="switchCat"
+        data-cat="{{item}}"
+      >{{item}}{{item === '全部' ? ' ' + totalCount : ''}}</view>
+    </scroll-view>
+
+    <!-- 结果数 -->
+    <view wx:if="{{filteredList.length > 0}}" class="result-bar">
+      找到 <text class="result-num">{{filteredList.length}}</text> 个结果
+    </view>
+
+    <!-- 列表 -->
+    <view class="qa-list">
+      <block wx:if="{{filteredList.length > 0}}">
+        <block wx:for="{{groupedList}}" wx:key="cat">
+          <view wx:if="{{showGroup}}" class="section-label">{{item.cat}}</view>
+          <view
+            wx:for="{{item.list}}" wx:for-item="qa" wx:key="id"
+            class="qa-row"
+            bindtap="openDetail"
+            data-id="{{qa.id}}"
+          >
+            <view class="qa-num-wrap">
+              <text class="qa-num">{{qa.id}}</text>
+            </view>
+            <view class="qa-mid">
+              <view class="qa-cat-tag">{{qa.cat}}</view>
+              <view class="qa-q-text">{{qa.q}}</view>
+            </view>
+            <text class="qa-chevron">›</text>
+          </view>
+        </block>
+      </block>
+      <view wx:else class="empty">
+        <text class="empty-icon">🦞</text>
+        <text>没找到相关问题，换个关键词试试？</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ── Tab: 新手入门 ── -->
+  <view wx:if="{{activeTab === 'start'}}" class="tab-body">
+    <view class="content-section">
+
+      <view class="content-card">
+        <view class="card-title">🦞 OpenClaw 是什么？</view>
+        <view class="card-text">OpenClaw 是一个本地运行的 AI 个人助理，可以通过微信、飞书、Telegram、WhatsApp 等聊天工具控制。</view>
+        <view class="card-text">简单理解：给你一种做皇帝的感觉，动动嘴就能让 AI 帮你干活，情绪价值拉满。</view>
+        <view class="feature-grid">
+          <view class="feature-item"><text class="feat-icon">📧</text><text>收发邮件、管理日历</text></view>
+          <view class="feature-item"><text class="feat-icon">🌐</text><text>浏览网页、搜索截图</text></view>
+          <view class="feature-item"><text class="feat-icon">📝</text><text>写代码、改文档、管项目</text></view>
+          <view class="feature-item"><text class="feat-icon">🔧</text><text>通过 Skills 扩展无限可能</text></view>
+        </view>
+        <view class="tip-box">💡 核心理念：好的 OpenClaw = 调教 + 优化 + 记忆系统。稳定 > 功能多！</view>
+      </view>
+
+      <view class="content-card">
+        <view class="card-title">✅ 方法一：WSL2 安装（Windows 推荐）</view>
+        <view class="card-text">官方强烈建议在 Windows 上使用 WSL2，直接安装可能有兼容性问题。</view>
+        <view class="step-item"><view class="step-dot">1</view><text>以管理员身份打开 PowerShell，启用 WSL2：</text></view>
+        <view class="code-block" bindtap="copyCode" data-code="wsl --install">
+          <text class="code-text">wsl --install</text>
+          <view class="copy-tag">复制</view>
+        </view>
+        <view class="step-item"><view class="step-dot">2</view><text>重启后打开 Ubuntu 终端，安装 OpenClaw：</text></view>
+        <view class="code-block" bindtap="copyCode" data-code="curl -fsSL https://openclaw.ai/install.sh | bash&#10;openclaw onboard --install-daemon&#10;openclaw gateway status&#10;openclaw dashboard">
+          <text class="code-text">curl -fsSL https://openclaw.ai/install.sh | bash{"\n"}openclaw onboard --install-daemon{"\n"}openclaw gateway status{"\n"}openclaw dashboard</text>
+          <view class="copy-tag">复制</view>
+        </view>
+      </view>
+
+      <view class="content-card">
+        <view class="card-title">⚡ 方法二：Windows 直接安装</view>
+        <view class="warn-box">⚠️ 需要 Node.js 22.x 或更高版本。访问 nodejs.org 下载 LTS 版本安装。</view>
+        <view class="card-text">打开 PowerShell（不是 CMD），运行：</view>
+        <view class="code-block" bindtap="copyCode" data-code="iwr -useb https://openclaw.ai/install.ps1 | iex">
+          <text class="code-text">iwr -useb https://openclaw.ai/install.ps1 | iex</text>
+          <view class="copy-tag">复制</view>
+        </view>
+        <view class="code-block" bindtap="copyCode" data-code="openclaw onboard --install-daemon">
+          <text class="code-text">openclaw onboard --install-daemon</text>
+          <view class="copy-tag">复制</view>
+        </view>
+      </view>
+
+      <view class="content-card">
+        <view class="card-title">📦 方法三：npm 手动安装</view>
+        <view class="code-block" bindtap="copyCode" data-code="npm install -g openclaw@latest&#10;openclaw onboard --install-daemon">
+          <text class="code-text">npm install -g openclaw@latest{"\n"}openclaw onboard --install-daemon</text>
+          <view class="copy-tag">复制</view>
+        </view>
+      </view>
+
+      <view class="content-card">
+        <view class="card-title">📋 常用命令速查表</view>
+        <view wx:for="{{cmds}}" wx:key="cmd" class="cmd-row">
+          <text class="cmd-code">{{item.cmd}}</text>
+          <text class="cmd-desc">{{item.desc}}</text>
+        </view>
+      </view>
+
+      <view class="content-card">
+        <view class="card-title">⚠️ 新手必看：常见坑</view>
+        <view class="warn-box">🖥️ 不要用 MacBook 当 24 小时服务器，建议部署到云服务器（阿里云、腾讯云等）。</view>
+        <view class="tip-box">😴 防止 Mac 休眠断联：只要终端开着就不会进入休眠：caffeinate -i</view>
+        <view class="warn-box">🛡️ 安全提示：官方插件网站有很多病毒 Skill，安装时要注意来源！</view>
+        <view class="tip-box">🔑 openclaw 命令找不到？执行 npm prefix -g 获取路径，将该路径添加到系统 PATH 环境变量。</view>
+        <view class="warn-box">💻 WSL2 安装后无法启动？确保 BIOS 中已启用虚拟化，且 Windows 版本为 1903 及以上。</view>
+      </view>
+
+    </view>
+  </view>
+
+  <!-- ── Tab: Skills ── -->
+  <view wx:if="{{activeTab === 'skills'}}" class="tab-body">
+    <view class="content-section">
+
+      <view class="content-card">
+        <view class="card-title">🧩 什么是 Skills？</view>
+        <view class="card-text">Skills（技能）就像给龙虾加上了利索的手和眼，必不可少！通过安装不同的 Skill，龙虾可以收发邮件、操控浏览器、管理文件等。</view>
+        <view class="good-box">💡 好用的 Skill = 给龙虾配置手、脚、耳朵。优先搞 Skills，再考虑多 Agent。</view>
+      </view>
+
+      <view class="content-card">
+        <view class="card-title">📦 安装 Skills</view>
+        <view class="code-block" bindtap="copyCode" data-code="openclaw skills install [技能名]&#10;openclaw skills list&#10;claw disable [技能名]">
+          <text class="code-text">openclaw skills install [技能名]{"\n"}openclaw skills list{"\n"}claw disable [技能名]</text>
+          <view class="copy-tag">复制</view>
+        </view>
+        <view class="warn-box">⚠️ 遇到 Rate limit exceeded？暂停 5-10 分钟后重试，或直接从 ClawHub 下载 ZIP 包手动解压到 ~/.openclaw/skills。</view>
+      </view>
+
+      <view class="content-card">
+        <view class="card-title">🛒 Skills 市场</view>
+        <view wx:for="{{skillMarket}}" wx:key="name" class="platform-row" bindtap="openUrl" data-url="{{item.url}}">
+          <view class="platform-badge">{{item.badge}}</view>
+          <view class="platform-info">
+            <view class="platform-name">{{item.name}}</view>
+            <view class="platform-desc">{{item.desc}}</view>
+          </view>
+          <text class="row-chevron">›</text>
+        </view>
+      </view>
+
+      <view class="content-card">
+        <view class="card-title">🎬 Skills 视频教程</view>
+        <view wx:for="{{skillVideos}}" wx:key="name" class="platform-row" bindtap="openUrl" data-url="{{item.url}}">
+          <view class="platform-badge">{{item.badge}}</view>
+          <view class="platform-info">
+            <view class="platform-name">{{item.name}}</view>
+            <view class="platform-desc">{{item.desc}}</view>
+          </view>
+          <text class="row-chevron">›</text>
+        </view>
+      </view>
+
+    </view>
+  </view>
+
+  <!-- ── Tab: 资源导航 ── -->
+  <view wx:if="{{activeTab === 'res'}}" class="tab-body">
+    <view class="content-section">
+      <view wx:for="{{resources}}" wx:key="title" class="content-card">
+        <view class="card-title">{{item.title}}</view>
+        <view
+          wx:for="{{item.items}}" wx:for-item="res" wx:key="name"
+          class="platform-row"
+          bindtap="openUrl"
+          data-url="{{res.url}}"
+        >
+          <view class="platform-badge">{{res.badge}}</view>
+          <view class="platform-info">
+            <view class="platform-name">{{res.name}}</view>
+            <view class="platform-desc">{{res.desc}}</view>
+          </view>
+          <text class="row-chevron">›</text>
+        </view>
+      </view>
+
+      <view class="content-card last-card">
+        <view class="card-title">🦞 最后的话</view>
+        <view class="card-text">OpenClaw 是个好东西，但需要耐心调教。不要急于求成，先把基础功能玩熟，再考虑进阶。</view>
+        <view class="card-slogan">记住：稳定 > 功能多。祝你玩虾成功！🎉</view>
+      </view>
+    </view>
+  </view>
+
+</view>

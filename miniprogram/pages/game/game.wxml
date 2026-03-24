@@ -1,0 +1,163 @@
+<!-- pages/game/game.wxml -->
+<view class="page">
+
+  <!-- 顶部栏 -->
+  <view class="g-hd">
+    <view class="g-back" bindtap="goBack">‹</view>
+    <view class="g-center">
+      <view class="g-title">{{lvEmoji}} {{lvName}}</view>
+      <view class="g-bar">
+        <view class="g-bar-fill" style="width:{{progPct}}%"></view>
+      </view>
+    </view>
+    <view class="g-lives">{{livesStr}}</view>
+  </view>
+
+  <!-- ══ RECOGNIZE（认知）══ -->
+  <view class="g-body" wx:if="{{gameType === 'recognize'}}">
+    <view class="q-lbl">这是什么？</view>
+    <view class="recog-display">
+      <view class="recog-emoji" wx:if="{{recogEmoji}}">{{recogEmoji}}</view>
+      <image class="recog-image" wx:if="{{recogImage}}" src="{{recogImage}}" mode="aspectFill"></image>
+    </view>
+    <view class="opts four">
+      <view
+        class="opt {{item.state}}"
+        wx:for="{{opts}}"
+        wx:key="index"
+        bindtap="onOptTap"
+        data-val="{{item.val}}"
+        data-idx="{{index}}"
+      >{{item.val}}</view>
+    </view>
+  </view>
+
+  <!-- ══ COUNT ══ -->
+  <view class="g-body" wx:if="{{gameType === 'count'}}">
+    <view class="q-lbl">下面有几个 {{countEmoji}}？</view>
+    <view class="items-box">
+      <view
+        class="dot {{item.hit ? 'hit' : ''}}"
+        wx:for="{{countItems}}"
+        wx:key="index"
+        bindtap="onDotTap"
+        data-idx="{{index}}"
+      >{{countEmoji}}</view>
+    </view>
+    <view class="count-disp">
+      <view class="count-lbl">点击每个来计数 👆</view>
+      <view class="count-num {{cntBump ? 'bump' : ''}}">{{counted}}</view>
+    </view>
+    <view class="opts">
+      <view
+        class="opt {{item.state}}"
+        wx:for="{{opts}}"
+        wx:key="index"
+        bindtap="onOptTap"
+        data-val="{{item.val}}"
+        data-idx="{{index}}"
+      >{{item.val}}</view>
+    </view>
+  </view>
+
+  <!-- ══ CALC / CALC20 ══ -->
+  <view class="g-body" wx:if="{{gameType === 'calc'}}">
+    <view class="calc-q">{{calcQ}}</view>
+    <view class="calc-hint">
+      <text>{{calcHint}}</text>
+    </view>
+    <view class="opts four">
+      <view
+        class="opt {{item.state}}"
+        wx:for="{{opts}}"
+        wx:key="index"
+        bindtap="onOptTap"
+        data-val="{{item.val}}"
+        data-idx="{{index}}"
+      >{{item.val}}</view>
+    </view>
+  </view>
+
+  <!-- ══ FILL ══ -->
+  <view class="g-body" wx:if="{{gameType === 'fill'}}">
+    <view class="fill-eq">
+      <block wx:for="{{fillParts}}" wx:key="index">
+        <view wx:if="{{item.type === 'box'}}" class="fill-box {{fillBoxState}}">{{fillInput || '?'}}</view>
+        <view wx:elif="{{item.type === 'op'}}" class="fill-op">{{item.val}}</view>
+        <view wx:else class="fill-num">{{item.val}}</view>
+      </block>
+    </view>
+    <view class="fill-hint">填入空格里的数是？</view>
+    <view class="numpad">
+      <view
+        class="nk {{item === '⌫' ? 'del' : ''}}"
+        wx:for="{{numKeys}}"
+        wx:key="index"
+        bindtap="onNumTap"
+        data-k="{{item}}"
+      >{{item}}</view>
+    </view>
+  </view>
+
+  <!-- ══ CMP ══ -->
+  <view class="g-body" wx:if="{{gameType === 'cmp'}}">
+    <view class="q-lbl">填入正确的符号</view>
+    <view class="cmp-row">
+      <view class="cmp-num">{{cmpA}}</view>
+      <view class="cmp-mid" style="{{cmpMidStyle}}">{{cmpMid}}</view>
+      <view class="cmp-num">{{cmpB}}</view>
+    </view>
+    <view class="cmp-opts">
+      <view class="cmp-btn {{cmpGtState}}" bindtap="onCmpTap" data-v=">">&gt;</view>
+      <view class="cmp-btn {{cmpEqState}}" bindtap="onCmpTap" data-v="=">=</view>
+      <view class="cmp-btn {{cmpLtState}}" bindtap="onCmpTap" data-v="<">&lt;</view>
+    </view>
+  </view>
+
+  <!-- ══ MATCH ══ -->
+  <view class="g-body" wx:if="{{gameType === 'match'}}">
+    <view class="q-lbl">把数字和点点配对 ✏️</view>
+    <view class="match-wrap">
+
+      <!-- 左列：数字 -->
+      <view class="match-col">
+        <view
+          class="mi num {{item.state}}"
+          wx:for="{{matchLeft}}"
+          wx:key="index"
+          bindtap="onLeftTap"
+          data-li="{{index}}"
+        >{{item.val}}</view>
+      </view>
+
+      <!-- 中间占位区 -->
+      <view class="match-spacer"></view>
+
+      <!-- 中间连线层（纯 CSS 绝对定位） -->
+      <view class="match-lines-wrap">
+        <view
+          wx:for="{{matchLines}}"
+          wx:key="index"
+          class="match-line {{item.ok ? 'line-ok' : 'line-bad'}}"
+          style="top:{{item.top}}px; left:{{item.left}}px; width:{{item.width}}px; transform:rotate({{item.deg}}deg);"
+        ></view>
+      </view>
+
+      <!-- 右列：点点 -->
+      <view class="match-col">
+        <view
+          class="mi dots {{item.state}}"
+          wx:for="{{matchRight}}"
+          wx:key="index"
+          bindtap="onRightTap"
+          data-ri="{{index}}"
+        >{{item.dots}}</view>
+      </view>
+
+    </view>
+  </view>
+
+  <!-- 反馈浮层 -->
+  <view class="fbt {{fbtClass}}" wx:if="{{fbtShow}}">{{fbtText}}</view>
+
+</view>

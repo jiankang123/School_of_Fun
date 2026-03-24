@@ -1,0 +1,19 @@
+{
+  "description": "数学启蒙星球",
+  "projectname": "math-planet",
+  "appid": "",
+  "compileType": "miniprogram",
+  "libVersion": "3.4.0",
+  "condition": {},
+  "setting": {
+    "es6": true,
+    "postcss": true,
+    "minified": true,
+    "newFeature": true,
+    "coverView": true,
+    "nodeModules": false,
+    "autoAudits": false,
+    "uploadWithSourceMap": true,
+    "ignoreUploadUnusedFiles": true
+  }
+}

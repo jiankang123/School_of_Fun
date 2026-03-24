@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数学启蒙星球 · 完整产品方案</title>
+<style>
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── CSS Variables ── */
+:root {
+  --bg: #FFFFFF;
+  --bg-secondary: #F8F9FA;
+  --text: #1A1A2E;
+  --text-secondary: #555770;
+  --border: #E8E8ED;
+  --accent: #4F46E5;
+  --accent-light: #EEF2FF;
+  --code-bg: #282A36;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-lg: 0 10px 25px rgba(0,0,0,0.08);
+  --radius: 12px;
+  --font-sans: -apple-system, 'PingFang SC', 'Noto Sans SC', 'Helvetica Neue', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', Menlo, monospace;
+}
+
+[data-theme="dark"] {
+  --bg: #0F0F23;
+  --bg-secondary: #1A1A2E;
+  --text: #E8E8ED;
+  --text-secondary: #A0A0B8;
+  --border: #2A2A3E;
+  --accent: #818CF8;
+  --accent-light: #1E1E3A;
+  --code-bg: #16161E;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-lg: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+/* ── Body ── */
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-secondary);
+  color: var(--text);
+  line-height: 1.75;
+  font-size: 16px;
+  transition: background 0.3s, color 0.3s;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Layout ── */
+.layout { display: flex; min-height: 100vh; }
+
+/* ── Sidebar (TOC) ── */
+.sidebar {
+  position: fixed; top: 0; left: 0;
+  width: 280px; height: 100vh;
+  background: var(--bg);
+  border-right: 1px solid var(--border);
+  padding: 24px 0;
+  overflow-y: auto;
+  z-index: 100;
+  transition: transform 0.3s, background 0.3s;
+}
+.sidebar-header {
+  padding: 0 24px 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.sidebar-title {
+  font-size: 14px; font-weight: 700;
+  color: var(--accent); letter-spacing: 0.5px; text-transform: uppercase;
+}
+.theme-toggle {
+  width: 36px; height: 36px;
+  border: 1px solid var(--border); border-radius: 8px;
+  background: var(--bg-secondary); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; transition: all 0.2s;
+}
+.theme-toggle:hover { border-color: var(--accent); }
+
+.toc-list { list-style: none; }
+.toc-list a {
+  display: block; padding: 8px 24px;
+  color: var(--text-secondary); text-decoration: none;
+  font-size: 14px; border-left: 3px solid transparent;
+  transition: all 0.15s;
+}
+.toc-list a:hover { color: var(--accent); background: var(--accent-light); border-left-color: var(--accent); }
+.toc-list .toc-h2 a { padding-left: 36px; font-size: 13px; }
+.toc-list .toc-h3 a { padding-left: 48px; font-size: 12px; }
+
+/* ── Main Content ── */
+.main {
+  margin-left: 280px; flex: 1;
+  padding: 48px 60px; max-width: 900px;
+}
+
+/* ── Mobile Toggle ── */
+.menu-toggle {
+  display: none; position: fixed; top: 16px; left: 16px; z-index: 200;
+  width: 40px; height: 40px; border-radius: 10px;
+  background: var(--bg); border: 1px solid var(--border);
+  box-shadow: var(--shadow); cursor: pointer;
+  align-items: center; justify-content: center; font-size: 20px;
+}
+.overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 90;
+}
+
+/* ── Typography ── */
+h1 { font-size: 2.2em; font-weight: 800; margin: 0.6em 0 0.4em; letter-spacing: -0.5px; color: var(--text); }
+h2 { font-size: 1.5em; font-weight: 700; margin: 1.8em 0 0.6em; padding-bottom: 0.3em; border-bottom: 2px solid var(--border); color: var(--text); }
+h3 { font-size: 1.2em; font-weight: 600; margin: 1.4em 0 0.5em; color: var(--text); }
+h4, h5, h6 { font-size: 1.05em; font-weight: 600; margin: 1.2em 0 0.4em; color: var(--text-secondary); }
+
+p { margin: 0.8em 0; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+strong { font-weight: 700; }
+em { font-style: italic; }
+hr { border: none; border-top: 2px solid var(--border); margin: 2em 0; }
+
+blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-light);
+  padding: 16px 20px;
+  margin: 1em 0;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  color: var(--text-secondary);
+}
+blockquote p { margin: 0.3em 0; }
+
+ul, ol { padding-left: 1.8em; margin: 0.8em 0; }
+li { margin: 0.3em 0; }
+li > ul, li > ol { margin: 0.2em 0; }
+
+/* ── Code ── */
+code {
+  font-family: var(--font-mono);
+  background: var(--accent-light);
+  color: var(--accent);
+  padding: 2px 7px;
+  border-radius: 6px;
+  font-size: 0.88em;
+}
+pre {
+  position: relative;
+  margin: 1.2em 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+pre code {
+  display: block;
+  background: var(--code-bg);
+  color: #F8F8F2;
+  padding: 20px 24px;
+  overflow-x: auto;
+  font-size: 14px;
+  line-height: 1.6;
+  border-radius: var(--radius);
+}
+.highlight pre {
+  background: var(--code-bg);
+  padding: 20px 24px;
+  border-radius: var(--radius);
+  overflow-x: auto;
+  margin: 1.2em 0;
+}
+.highlight code {
+  background: none; color: inherit; padding: 0; border-radius: 0;
+}
+
+/* copy button */
+.copy-btn {
+  position: absolute; top: 10px; right: 12px;
+  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
+  color: #ccc; font-size: 12px; padding: 4px 10px;
+  border-radius: 6px; cursor: pointer; transition: all 0.2s;
+  font-family: var(--font-sans);
+}
+.copy-btn:hover { background: rgba(255,255,255,0.2); color: #fff; }
+.copy-btn.copied { background: #34C759; color: #fff; border-color: #34C759; }
+
+/* ── Table ── */
+table {
+  width: 100%; border-collapse: collapse;
+  margin: 1.2em 0; font-size: 0.92em;
+  border-radius: var(--radius); overflow: hidden;
+  box-shadow: var(--shadow);
+}
+thead { background: var(--accent); color: #fff; }
+th {
+  padding: 12px 16px; text-align: left;
+  font-weight: 600; font-size: 13px; letter-spacing: 0.3px;
+}
+td { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+tbody tr { background: var(--bg); transition: background 0.15s; }
+tbody tr:hover { background: var(--accent-light); }
+
+/* ── Images ── */
+img {
+  max-width: 100%; height: auto;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin: 1em 0;
+}
+
+/* ── Footnotes ── */
+.footnote { font-size: 0.85em; color: var(--text-secondary); margin-top: 3em; border-top: 1px solid var(--border); padding-top: 1em; }
+
+/* ── Admonitions ── */
+.admonition {
+  padding: 16px 20px; margin: 1em 0; border-radius: var(--radius);
+  border-left: 4px solid var(--accent); background: var(--accent-light);
+}
+.admonition-title { font-weight: 700; margin-bottom: 4px; }
+
+/* ── Responsive ── */
+@media (max-width: 860px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); box-shadow: var(--shadow-lg); }
+  .main { margin-left: 0; padding: 32px 20px; padding-top: 72px; }
+  .menu-toggle { display: flex; }
+  .overlay.show { display: block; }
+  table { display: block; overflow-x: auto; }
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ── Pygments (dark) ── */
+pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #49483e }
+.highlight { background: #272822; color: #F8F8F2 }
+.highlight .c { color: #959077 } /* Comment */
+.highlight .err { color: #ED007E; background-color: #1E0010 } /* Error */
+.highlight .esc { color: #F8F8F2 } /* Escape */
+.highlight .g { color: #F8F8F2 } /* Generic */
+.highlight .k { color: #66D9EF } /* Keyword */
+.highlight .l { color: #AE81FF } /* Literal */
+.highlight .n { color: #F8F8F2 } /* Name */
+.highlight .o { color: #FF4689 } /* Operator */
+.highlight .x { color: #F8F8F2 } /* Other */
+.highlight .p { color: #F8F8F2 } /* Punctuation */
+.highlight .ch { color: #959077 } /* Comment.Hashbang */
+.highlight .cm { color: #959077 } /* Comment.Multiline */
+.highlight .cp { color: #959077 } /* Comment.Preproc */
+.highlight .cpf { color: #959077 } /* Comment.PreprocFile */
+.highlight .c1 { color: #959077 } /* Comment.Single */
+.highlight .cs { color: #959077 } /* Comment.Special */
+.highlight .gd { color: #FF4689 } /* Generic.Deleted */
+.highlight .ge { color: #F8F8F2; font-style: italic } /* Generic.Emph */
+.highlight .ges { color: #F8F8F2; font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #F8F8F2 } /* Generic.Error */
+.highlight .gh { color: #F8F8F2 } /* Generic.Heading */
+.highlight .gi { color: #A6E22E } /* Generic.Inserted */
+.highlight .go { color: #66D9EF } /* Generic.Output */
+.highlight .gp { color: #FF4689; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { color: #F8F8F2; font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #959077 } /* Generic.Subheading */
+.highlight .gt { color: #F8F8F2 } /* Generic.Traceback */
+.highlight .kc { color: #66D9EF } /* Keyword.Constant */
+.highlight .kd { color: #66D9EF } /* Keyword.Declaration */
+.highlight .kn { color: #FF4689 } /* Keyword.Namespace */
+.highlight .kp { color: #66D9EF } /* Keyword.Pseudo */
+.highlight .kr { color: #66D9EF } /* Keyword.Reserved */
+.highlight .kt { color: #66D9EF } /* Keyword.Type */
+.highlight .ld { color: #E6DB74 } /* Literal.Date */
+.highlight .m { color: #AE81FF } /* Literal.Number */
+.highlight .s { color: #E6DB74 } /* Literal.String */
+.highlight .na { color: #A6E22E } /* Name.Attribute */
+.highlight .nb { color: #F8F8F2 } /* Name.Builtin */
+.highlight .nc { color: #A6E22E } /* Name.Class */
+.highlight .no { color: #66D9EF } /* Name.Constant */
+.highlight .nd { color: #A6E22E } /* Name.Decorator */
+.highlight .ni { color: #F8F8F2 } /* Name.Entity */
+.highlight .ne { color: #A6E22E } /* Name.Exception */
+.highlight .nf { color: #A6E22E } /* Name.Function */
+.highlight .nl { color: #F8F8F2 } /* Name.Label */
+.highlight .nn { color: #F8F8F2 } /* Name.Namespace */
+.highlight .nx { color: #A6E22E } /* Name.Other */
+.highlight .py { color: #F8F8F2 } /* Name.Property */
+.highlight .nt { color: #FF4689 } /* Name.Tag */
+.highlight .nv { color: #F8F8F2 } /* Name.Variable */
+.highlight .ow { color: #FF4689 } /* Operator.Word */
+.highlight .pm { color: #F8F8F2 } /* Punctuation.Marker */
+.highlight .w { color: #F8F8F2 } /* Text.Whitespace */
+.highlight .mb { color: #AE81FF } /* Literal.Number.Bin */
+.highlight .mf { color: #AE81FF } /* Literal.Number.Float */
+.highlight .mh { color: #AE81FF } /* Literal.Number.Hex */
+.highlight .mi { color: #AE81FF } /* Literal.Number.Integer */
+.highlight .mo { color: #AE81FF } /* Literal.Number.Oct */
+.highlight .sa { color: #E6DB74 } /* Literal.String.Affix */
+.highlight .sb { color: #E6DB74 } /* Literal.String.Backtick */
+.highlight .sc { color: #E6DB74 } /* Literal.String.Char */
+.highlight .dl { color: #E6DB74 } /* Literal.String.Delimiter */
+.highlight .sd { color: #E6DB74 } /* Literal.String.Doc */
+.highlight .s2 { color: #E6DB74 } /* Literal.String.Double */
+.highlight .se { color: #AE81FF } /* Literal.String.Escape */
+.highlight .sh { color: #E6DB74 } /* Literal.String.Heredoc */
+.highlight .si { color: #E6DB74 } /* Literal.String.Interpol */
+.highlight .sx { color: #E6DB74 } /* Literal.String.Other */
+.highlight .sr { color: #E6DB74 } /* Literal.String.Regex */
+.highlight .s1 { color: #E6DB74 } /* Literal.String.Single */
+.highlight .ss { color: #E6DB74 } /* Literal.String.Symbol */
+.highlight .bp { color: #F8F8F2 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #A6E22E } /* Name.Function.Magic */
+.highlight .vc { color: #F8F8F2 } /* Name.Variable.Class */
+.highlight .vg { color: #F8F8F2 } /* Name.Variable.Global */
+.highlight .vi { color: #F8F8F2 } /* Name.Variable.Instance */
+.highlight .vm { color: #F8F8F2 } /* Name.Variable.Magic */
+.highlight .il { color: #AE81FF } /* Literal.Number.Integer.Long */
+</style>
+</head>
+<body>
+
+<button class="menu-toggle" onclick="toggleSidebar()" aria-label="菜单">☰</button>
+<div class="overlay" onclick="toggleSidebar()"></div>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span class="sidebar-title">目录</span>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="切换主题">🌓</button>
+    </div>
+    <div class="toc-list">
+      <div class="toc">
+<ul>
+<li><a href="#_1">数学启蒙星球 · 完整产品方案</a><ul>
+<li><a href="#_2">一、产品核心定位</a><ul>
+<li><a href="#_3">产品名称</a></li>
+<li><a href="#_4">核心理念</a></li>
+<li><a href="#_5">产品优势</a></li>
+</ul>
+</li>
+<li><a href="#_6">二、课程结构设计</a><ul>
+<li><a href="#35">阶段一：学前班（3–5 岁）</a></li>
+<li><a href="#56">阶段二：幼儿园（5–6 岁）</a></li>
+<li><a href="#68">阶段三：小学低年级（6–8 岁）</a></li>
+<li><a href="#812">阶段四：小学中高年级（8–12 岁）</a></li>
+</ul>
+</li>
+<li><a href="#_7">三、技术实现方案</a><ul>
+<li><a href="#_8">技术栈选择</a></li>
+<li><a href="#_9">核心页面结构</a></li>
+<li><a href="#_10">游戏核心机制</a></li>
+</ul>
+</li>
+<li><a href="#ui">四、UI 设计规范</a><ul>
+<li><a href="#_11">视觉风格</a></li>
+<li><a href="#_12">交互原则</a></li>
+</ul>
+</li>
+<li><a href="#_13">五、盈利模式</a><ul>
+<li><a href="#_14">模式一：免费 + 订阅（推荐）</a></li>
+<li><a href="#_15">模式二：关卡包购买</a></li>
+<li><a href="#_16">模式三：家长增值服务</a></li>
+<li><a href="#_17">变现路径预测</a></li>
+</ul>
+</li>
+<li><a href="#_18">六、增长策略</a><ul>
+<li><a href="#_19">获客渠道</a></li>
+<li><a href="#_20">留存策略</a></li>
+</ul>
+</li>
+<li><a href="#mvp">七、MVP 开发计划</a><ul>
+<li><a href="#8">第一版（8 周）</a></li>
+<li><a href="#4">第二版（+4 周）</a></li>
+<li><a href="#8_1">第三版（+8 周）</a></li>
+</ul>
+</li>
+<li><a href="#_21">八、竞品分析</a></li>
+</ul>
+</li>
+</ul>
+</div>
+
+    </div>
+  </nav>
+
+  <article class="main" id="content">
+    <h1 id="_1">数学启蒙星球 · 完整产品方案</h1>
+<blockquote>
+<p>只教数学的儿童启蒙教育小程序 · 产品设计 + 技术实现 + 内容结构 + 盈利模式</p>
+</blockquote>
+<hr />
+<h2 id="_2">一、产品核心定位</h2>
+<h3 id="_3">产品名称</h3>
+<p><strong>数学启蒙星球</strong> ⭐</p>
+<p>子标题：陪伴 3-12 岁孩子爱上数学</p>
+<h3 id="_4">核心理念</h3>
+<p>用游戏方式学数学，不是刷题，是探索。</p>
+<table>
+<thead>
+<tr>
+<th>❌ 不做</th>
+<th>✅ 做</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>刷题</td>
+<td>游戏</td>
+</tr>
+<tr>
+<td>题库</td>
+<td>动画</td>
+</tr>
+<tr>
+<td>考试</td>
+<td>互动</td>
+</tr>
+<tr>
+<td>死记硬背</td>
+<td>场景理解</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_5">产品优势</h3>
+<ul>
+<li><strong>垂直</strong> — 只做数学，做深做透</li>
+<li><strong>家长需求大</strong> — 3-12 岁数学启蒙是刚需</li>
+<li><strong>审核容易</strong> — 教育类工具，微信审核友好</li>
+<li><strong>可持续更新</strong> — 内容可以按年级、按季节不断扩充</li>
+</ul>
+<hr />
+<h2 id="_6">二、课程结构设计</h2>
+<h3 id="35">阶段一：学前班（3–5 岁）</h3>
+<p><strong>目标：建立数字概念</strong></p>
+<p><strong>内容模块：</strong>
+- 认识数字 1-10
+- 大小比较
+- 数量对应
+- 简单加减（5以内）
+- 图形识别（圆、方、三角）</p>
+<p><strong>小游戏：</strong></p>
+<table>
+<thead>
+<tr>
+<th>游戏名</th>
+<th>玩法</th>
+<th>核心能力</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🍎 数苹果</td>
+<td>点击苹果数数</td>
+<td>数量感知</td>
+</tr>
+<tr>
+<td>🔵 找相同形状</td>
+<td>从图形中找同类</td>
+<td>形状识别</td>
+</tr>
+<tr>
+<td>🔢 拖动数字</td>
+<td>把数字拖到对应数量</td>
+<td>数量对应</td>
+</tr>
+<tr>
+<td>〰️ 连线配对</td>
+<td>数字与点阵连线</td>
+<td>符号理解</td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例场景：</strong></p>
+<div class="highlight"><pre><span></span><code>🍎🍎🍎 = ?
+拖动数字 [1] [2] [3] [4] [5]
+                        ↑答对了！
+</code></pre></div>
+
+<hr />
+<h3 id="56">阶段二：幼儿园（5–6 岁）</h3>
+<p><strong>目标：理解基础计算</strong></p>
+<p><strong>内容模块：</strong>
+- 10以内加减法
+- 数字排序
+- 简单规律
+- 时间概念（早上/下午、昨天/今天/明天）</p>
+<p><strong>小游戏：</strong></p>
+<table>
+<thead>
+<tr>
+<th>游戏名</th>
+<th>玩法</th>
+<th>核心能力</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🚂 小火车排序</td>
+<td>把车厢按数字顺序排列</td>
+<td>数序理解</td>
+</tr>
+<tr>
+<td>🌀 数字迷宫</td>
+<td>按数字顺序走出迷宫</td>
+<td>数字认知</td>
+</tr>
+<tr>
+<td>🔷 找规律</td>
+<td>补全图案/数字规律</td>
+<td>逻辑思维</td>
+</tr>
+<tr>
+<td>⏰ 时间游戏</td>
+<td>拨动时钟认识时间</td>
+<td>时间概念</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="68">阶段三：小学低年级（6–8 岁）</h3>
+<p><strong>一年级模块：</strong>
+- 20以内加减法
+- 数轴认知
+- 简单应用题（买东西、分糖果）</p>
+<p><strong>游戏：</strong>
+- 🦘 数轴跳跳（小动物在数轴上跳跃）
+- 🐱 小猫钓鱼算数（钓到鱼显示算式）</p>
+<p><strong>二年级模块：</strong>
+- 100以内加减法
+- 乘法初步（乘法口诀）
+- 时间计算（几点几分）</p>
+<p><strong>游戏：</strong>
+- 🎰 乘法转盘（转动转盘出题）
+- 🛒 买东西找钱（模拟超市场景）</p>
+<hr />
+<h3 id="812">阶段四：小学中高年级（8–12 岁）</h3>
+<p><strong>三四年级模块：</strong>
+- 四则混合运算
+- 分数初步
+- 面积与周长
+- 简单统计图</p>
+<p><strong>五六年级模块：</strong>
+- 分数运算
+- 比例与百分比
+- 几何基础
+- 方程入门</p>
+<hr />
+<h2 id="_7">三、技术实现方案</h2>
+<h3 id="_8">技术栈选择</h3>
+<table>
+<thead>
+<tr>
+<th>层次</th>
+<th>选择</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>小程序框架</td>
+<td>微信原生</td>
+<td>审核友好、性能好</td>
+</tr>
+<tr>
+<td>动画引擎</td>
+<td>Canvas + CSS动画</td>
+<td>轻量无需插件</td>
+</tr>
+<tr>
+<td>数据存储</td>
+<td>wx.storage + 云数据库</td>
+<td>进度同步多设备</td>
+</tr>
+<tr>
+<td>后端</td>
+<td>微信云开发</td>
+<td>免服务器运维</td>
+</tr>
+<tr>
+<td>音效</td>
+<td>wx.createInnerAudioContext</td>
+<td>原生支持</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_9">核心页面结构</h3>
+<div class="highlight"><pre><span></span><code>pages/
+├── home/          首页（星球地图选关）
+├── stage/         阶段选择
+├── game/          游戏主界面
+│   ├── count/     数数游戏
+│   ├── match/     连线配对
+│   ├── sort/      排序游戏
+│   ├── calc/      计算游戏
+│   └── pattern/   规律游戏
+├── reward/        奖励/成就页
+├── progress/      学习进度
+└── parent/        家长控制台
+</code></pre></div>
+
+<h3 id="_10">游戏核心机制</h3>
+<ol>
+<li><strong>关卡制</strong> — 每个知识点 5-10 关，闯关解锁</li>
+<li><strong>星星奖励</strong> — 每关最多 3 颗星，鼓励完美通关</li>
+<li><strong>能量系统</strong> — 错误次数有限，防止无脑乱点</li>
+<li><strong>连续登录奖励</strong> — 每日打卡获得道具</li>
+<li><strong>成就徽章</strong> — 里程碑解锁（如&rdquo;加法达人&rdquo;）</li>
+</ol>
+<hr />
+<h2 id="ui">四、UI 设计规范</h2>
+<h3 id="_11">视觉风格</h3>
+<ul>
+<li><strong>主色调</strong> — 明亮活泼：橙黄 <code>#FFB300</code> + 天蓝 <code>#4FC3F7</code></li>
+<li><strong>辅助色</strong> — 绿色 <code>#66BB6A</code>（正确）、红色 <code>#EF5350</code>（错误）</li>
+<li><strong>字体</strong> — 圆体，大号，间距宽松</li>
+<li><strong>图标</strong> — 卡通风格，拟人化小动物</li>
+</ul>
+<h3 id="_12">交互原则</h3>
+<ul>
+<li>所有按钮 <strong>最小 44px</strong>（手指点击友好）</li>
+<li>操作 <strong>即时反馈</strong>（音效 + 动画同时触发）</li>
+<li>错误后 <strong>温和引导</strong>（不惩罚，不批评）</li>
+<li>每关 <strong>不超过 3 分钟</strong>（注意力适配）</li>
+</ul>
+<hr />
+<h2 id="_13">五、盈利模式</h2>
+<h3 id="_14">模式一：免费 + 订阅（推荐）</h3>
+<table>
+<thead>
+<tr>
+<th>版本</th>
+<th>价格</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>免费版</td>
+<td>¥0</td>
+<td>每个阶段前 2 关免费体验</td>
+</tr>
+<tr>
+<td>月度会员</td>
+<td>¥18/月</td>
+<td>全部内容无限玩</td>
+</tr>
+<tr>
+<td>年度会员</td>
+<td>¥98/年</td>
+<td>全部内容 + 专属皮肤 + 进度报告</td>
+</tr>
+<tr>
+<td>终身会员</td>
+<td>¥298</td>
+<td>永久解锁 + 未来新内容</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_15">模式二：关卡包购买</h3>
+<ul>
+<li>单个年级包：¥30</li>
+<li>学前全套：¥68</li>
+<li>小学全套：¥128</li>
+</ul>
+<h3 id="_16">模式三：家长增值服务</h3>
+<ul>
+<li><strong>学习报告</strong> — 每周发送孩子学习数据（¥6/月）</li>
+<li><strong>错题本</strong> — 自动归档错题，生成复习计划</li>
+<li><strong>亲子模式</strong> — 家长陪玩专属关卡</li>
+</ul>
+<h3 id="_17">变现路径预测</h3>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>DAU</th>
+<th>付费率</th>
+<th>月收入预估</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>冷启动（0-3月）</td>
+<td>500</td>
+<td>5%</td>
+<td>¥1,500</td>
+</tr>
+<tr>
+<td>成长期（3-6月）</td>
+<td>5,000</td>
+<td>8%</td>
+<td>¥18,000</td>
+</tr>
+<tr>
+<td>稳定期（6-12月）</td>
+<td>20,000</td>
+<td>10%</td>
+<td>¥90,000</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_18">六、增长策略</h2>
+<h3 id="_19">获客渠道</h3>
+<ol>
+<li><strong>微信分享裂变</strong> — 孩子获得奖励时，引导家长分享给好友</li>
+<li><strong>宝妈社群</strong> — 提供教师版/家长版，进入学校场景</li>
+<li><strong>KOL 合作</strong> — 找育儿博主测评</li>
+<li><strong>幼儿园合作</strong> — 向幼儿园提供免费班级账号</li>
+</ol>
+<h3 id="_20">留存策略</h3>
+<ol>
+<li><strong>每日任务</strong> — 每天 5 道题，保持习惯</li>
+<li><strong>成长树</strong> — 可视化进度，让孩子看到成长</li>
+<li><strong>节日特别关卡</strong> — 春节、六一等节日出限定内容</li>
+<li><strong>家长推送</strong> — 每日学习提醒，附上昨日成绩</li>
+</ol>
+<hr />
+<h2 id="mvp">七、MVP 开发计划</h2>
+<h3 id="8">第一版（8 周）</h3>
+<ul>
+<li>[ ] 学前班（3-5岁）全部内容</li>
+<li>[ ] 3 种核心游戏类型（数数、连线、计算）</li>
+<li>[ ] 基础奖励系统（星星 + 音效）</li>
+<li>[ ] 家长查看进度</li>
+<li>[ ] 微信登录 + 数据同步</li>
+</ul>
+<h3 id="4">第二版（+4 周）</h3>
+<ul>
+<li>[ ] 幼儿园阶段内容</li>
+<li>[ ] 订阅付费功能</li>
+<li>[ ] 分享裂变功能</li>
+<li>[ ] 成就系统</li>
+</ul>
+<h3 id="8_1">第三版（+8 周）</h3>
+<ul>
+<li>[ ] 小学一、二年级内容</li>
+<li>[ ] 错题复习功能</li>
+<li>[ ] 家长周报</li>
+<li>[ ] A/B 测试框架</li>
+</ul>
+<hr />
+<h2 id="_21">八、竞品分析</h2>
+<table>
+<thead>
+<tr>
+<th>产品</th>
+<th>优势</th>
+<th>劣势</th>
+<th>我们的机会</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>火花思维</td>
+<td>品牌强</td>
+<td>价格贵（¥2000+/年）</td>
+<td>低价轻量版</td>
+</tr>
+<tr>
+<td>猿辅导</td>
+<td>内容丰富</td>
+<td>太综合，不专注</td>
+<td>纯数学垂直</td>
+</tr>
+<tr>
+<td>数学花园</td>
+<td>老牌产品</td>
+<td>UI 老旧</td>
+<td>现代化体验</td>
+</tr>
+<tr>
+<td>小猿口算</td>
+<td>口算专注</td>
+<td>只有刷题</td>
+<td>游戏化学习</td>
+</tr>
+</tbody>
+</table>
+<p><strong>核心差异化：比大平台更聚焦，比口算APP更游戏化。</strong></p>
+<hr />
+<p><em>文档版本 v1.0 · 2026年3月</em></p>
+  </article>
+</div>
+
+<script>
+// Theme
+function toggleTheme() {
+  const d = document.documentElement;
+  const next = d.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  d.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+}
+(function() {
+  const saved = localStorage.getItem('theme');
+  if (saved) document.documentElement.setAttribute('data-theme', saved);
+  else if (window.matchMedia('(prefers-color-scheme: dark)').matches)
+    document.documentElement.setAttribute('data-theme', 'dark');
+})();
+
+// Mobile sidebar
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.querySelector('.overlay').classList.toggle('show');
+}
+
+// Copy buttons
+document.querySelectorAll('pre').forEach(pre => {
+  const btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = '复制';
+  btn.addEventListener('click', () => {
+    const code = pre.querySelector('code') || pre;
+    navigator.clipboard.writeText(code.textContent).then(() => {
+      btn.textContent = '已复制 ✓';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = '复制'; btn.classList.remove('copied'); }, 2000);
+    });
+  });
+  pre.style.position = 'relative';
+  pre.appendChild(btn);
+});
+
+// Smooth scroll for TOC links
+document.querySelectorAll('.toc-list a').forEach(a => {
+  a.addEventListener('click', e => {
+    const href = a.getAttribute('href');
+    if (href && href.startsWith('#')) {
+      e.preventDefault();
+      const target = document.getElementById(href.slice(1));
+      if (target) { target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      // close sidebar on mobile
+      document.getElementById('sidebar').classList.remove('open');
+      document.querySelector('.overlay').classList.remove('show');
+    }
+  });
+});
+</script>
+</body>
+</html>

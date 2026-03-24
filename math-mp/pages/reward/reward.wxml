@@ -1,0 +1,27 @@
+<!-- pages/reward/reward.wxml -->
+<view class="page">
+  <view class="firework">🎊</view>
+
+  <view class="reward-card">
+    <view class="result-emoji">{{resultEmoji}}</view>
+    <view class="result-title">{{resultTitle}}</view>
+    <view class="result-sub">{{resultSub}}</view>
+
+    <view class="stars-row">
+      <view class="star-wrap {{stars >= 1 ? 'lit' : ''}}" style="animation-delay:0.1s">★</view>
+      <view class="star-wrap {{stars >= 2 ? 'lit' : ''}}" style="animation-delay:0.25s">★</view>
+      <view class="star-wrap {{stars >= 3 ? 'lit' : ''}}" style="animation-delay:0.4s">★</view>
+    </view>
+
+    <view class="earn-row">
+      <view class="earn-tag">+{{earnedStars}} ⭐ 获得</view>
+    </view>
+  </view>
+
+  <view class="action-btns">
+    <view class="btn-ghost half-btn" bindtap="replay">再玩一次</view>
+    <view class="btn-primary half-btn" bindtap="nextLevel">下一关 →</view>
+  </view>
+
+  <view class="back-link" bindtap="backToStage">← 返回关卡地图</view>
+</view>

@@ -326,3 +326,23 @@ xcuserdata/
 # ============================================
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
+# ============================================
+# Project Specific
+# ============================================
+# CodeBanana internal files
+.codebanana/
+.coding-agent/
+.deployment_logs/
+
+# Temporary content files
+*_content.txt
+guide_content.txt
+pdf_content.txt
+win_content.txt
+
+# Large PDF files (optional - remove if you want to commit them)
+# *.pdf
+
+# Zip archives (optional)
+# *.zip
+

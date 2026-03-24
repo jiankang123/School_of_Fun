@@ -1,0 +1,20 @@
+<!-- pages/reward/reward.wxml -->
+<view class="rw-page">
+  <view class="fw">🎊</view>
+  <view class="rw-card">
+    <view class="rw-ico">{{ico}}</view>
+    <view class="rw-ttl">{{ttl}}</view>
+    <view class="rw-sub">{{sub}}</view>
+    <view class="stars-row">
+      <view class="rw-star {{stars >= 1 ? 'lit' : ''}}">★</view>
+      <view class="rw-star {{stars >= 2 ? 'lit' : ''}}">★</view>
+      <view class="rw-star {{stars >= 3 ? 'lit' : ''}}">★</view>
+    </view>
+    <view class="earn-tag">+{{earnPts}}⭐ 获得</view>
+  </view>
+  <view class="rw-btns">
+    <view class="rw-ghost" bindtap="replay">再玩一次</view>
+    <view class="rw-solid" bindtap="nextLevel">{{nextBtnText}}</view>
+  </view>
+  <view class="rw-back" bindtap="backStage">← 返回关卡地图</view>
+</view>

@@ -1,0 +1,72 @@
+/* app.wxss - 全局样式 */
+page {
+  background: #FFF9F0;
+  font-family: -apple-system, 'PingFang SC', 'Noto Sans SC', sans-serif;
+  color: #2D2D2D;
+  font-size: 30rpx;
+}
+
+/* ── CSS 变量（用 var 无法在小程序 wxss 生效，改为直接写色值）── */
+
+/* ── 通用卡片 ── */
+.card {
+  background: #ffffff;
+  border-radius: 22rpx;
+  box-shadow: 0 4rpx 24rpx rgba(0,0,0,.07);
+}
+
+.sec-hd {
+  font-size: 22rpx;
+  font-weight: 700;
+  color: #AAAAAA;
+  letter-spacing: 2rpx;
+  padding: 32rpx 40rpx 16rpx;
+}
+
+.pb {
+  height: 12rpx;
+  background: #F0F0F0;
+  border-radius: 6rpx;
+  overflow: hidden;
+}
+.pf {
+  height: 100%;
+  border-radius: 6rpx;
+}
+.tag {
+  background: #FFF8E1;
+  color: #FF8F00;
+  font-size: 22rpx;
+  font-weight: 700;
+  padding: 6rpx 20rpx;
+  border-radius: 40rpx;
+}
+
+/* ── 动画 ── */
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-20rpx); }
+}
+@keyframes bump {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+@keyframes cbounce {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.22); }
+  100% { transform: scale(1); }
+}
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25%     { transform: translateX(-12rpx); }
+  75%     { transform: translateX(12rpx); }
+}
+@keyframes starpop {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+@keyframes fbIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(20rpx); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}

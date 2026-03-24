@@ -1,0 +1,76 @@
+/* app.wxss */
+page {
+  font-family: -apple-system, 'PingFang SC', 'Noto Sans SC', sans-serif;
+  background: #FFF9F0;
+  color: #2D2D2D;
+  font-size: 28rpx;
+}
+
+/* ── 通用卡片 ── */
+.card {
+  background: #FFFFFF;
+  border-radius: 32rpx;
+  box-shadow: 0 4rpx 24rpx rgba(0,0,0,0.06);
+}
+
+/* ── 通用按钮 ── */
+.btn-primary {
+  background: linear-gradient(135deg, #FFB300, #FF8F00);
+  color: #FFFFFF;
+  font-size: 32rpx;
+  font-weight: 700;
+  border-radius: 60rpx;
+  padding: 26rpx 0;
+  text-align: center;
+  box-shadow: 0 8rpx 24rpx rgba(255,179,0,0.4);
+}
+.btn-primary:active { opacity: 0.85; }
+
+.btn-ghost {
+  border: 2rpx solid #E8E8E8;
+  color: #777;
+  font-size: 28rpx;
+  border-radius: 60rpx;
+  padding: 22rpx 0;
+  text-align: center;
+  background: #FFFFFF;
+}
+
+/* ── 星星标签 ── */
+.star-tag {
+  background: #FFF8E1;
+  color: #FF8F00;
+  font-size: 24rpx;
+  font-weight: 700;
+  padding: 6rpx 18rpx;
+  border-radius: 40rpx;
+  display: inline-flex;
+  align-items: center;
+  gap: 4rpx;
+}
+
+/* ── 进度条 ── */
+.prog-bar {
+  height: 12rpx;
+  background: #F0F0F0;
+  border-radius: 6rpx;
+  overflow: hidden;
+}
+.prog-fill {
+  height: 100%;
+  border-radius: 6rpx;
+  transition: width 0.4s;
+}
+
+/* ── section 标题 ── */
+.section-hd {
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #AAAAAA;
+  letter-spacing: 2rpx;
+  padding: 32rpx 32rpx 16rpx;
+  text-transform: uppercase;
+}
+
+/* ── 安全底部留白 ── */
+.safe-bottom { height: 160rpx; }

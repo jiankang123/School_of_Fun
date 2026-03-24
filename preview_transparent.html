@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>🦞 龙虾宝典 · ArkClaw 完全指南</title>
+<style>
+  :root {
+    --primary: #FF6B35;
+    --primary-dark: #E5541F;
+    --bg: #F5F5F7;
+    --card: #FFFFFF;
+    --text: #1A1A1A;
+    --text-2: #555;
+    --text-3: #999;
+    --border: #F0F0F0;
+    --tag-bg: #FFF3EE;
+    --tag-color: #FF6B35;
+    --code-bg: #1C1C1E;
+    --code-text: #F8E3C2;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html { scroll-behavior:smooth; }
+  body {
+    font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;
+    background:var(--bg); color:var(--text);
+    min-height:100vh; max-width:480px; margin:0 auto;
+    overflow-x:hidden;
+  }
+
+  /* ══ 页面滑动容器 ══ */
+  .pages {
+    display:flex; width:200%;
+    transition:transform 0.32s cubic-bezier(0.4,0,0.2,1);
+  }
+  .pages.on-detail { transform:translateX(-50%); }
+  .page { width:50%; min-height:100vh; }
+
+  /* ══ Banner ══ */
+  .banner {
+    background:linear-gradient(135deg,#FF6B35 0%,#FF4500 60%,#C0392B 100%);
+    padding:44px 20px 28px; position:relative; overflow:hidden;
+  }
+  .banner::before {
+    content:''; position:absolute; top:-40px; right:-40px;
+    width:180px; height:180px; background:rgba(255,255,255,0.08); border-radius:50%;
+  }
+  .banner::after {
+    content:''; position:absolute; bottom:-60px; left:-20px;
+    width:220px; height:220px; background:rgba(255,255,255,0.05); border-radius:50%;
+  }
+  .banner-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+  .banner-emoji { font-size:2.4rem; line-height:1; }
+  .banner-ver {
+    background:rgba(255,255,255,0.2); color:#fff;
+    font-size:0.72rem; font-weight:600;
+    padding:4px 10px; border-radius:20px; backdrop-filter:blur(4px);
+  }
+  .banner-title { font-size:1.6rem; font-weight:700; color:#fff; margin-bottom:5px; letter-spacing:-0.3px; }
+  .banner-sub { font-size:0.82rem; color:rgba(255,255,255,0.78); line-height:1.5; }
+  .banner-stats {
+    display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;
+  }
+  .stat-chip {
+    background:rgba(255,255,255,0.18); color:#fff;
+    font-size:0.73rem; font-weight:600;
+    padding:4px 10px; border-radius:20px; backdrop-filter:blur(4px);
+  }
+
+  /* ══ 主 Tab 导航 ══ */
+  .main-tabs {
+    display:flex; background:var(--card);
+    border-bottom:1px solid var(--border);
+    position:sticky; top:0; z-index:100;
+    overflow-x:auto; scrollbar-width:none;
+  }
+  .main-tabs::-webkit-scrollbar { display:none; }
+  .main-tab {
+    flex:1; min-width:fit-content;
+    padding:12px 6px 10px;
+    font-size:0.8rem; font-weight:600; color:var(--text-3);
+    text-align:center; cursor:pointer; white-space:nowrap;
+    border-bottom:2px solid transparent;
+    transition:all 0.18s; user-select:none;
+  }
+  .main-tab.active { color:var(--primary); border-bottom-color:var(--primary); }
+
+  /* ══ Tab 内容区 ══ */
+  .tab-content { display:none; }
+  .tab-content.active { display:block; }
+
+  /* ══ 搜索 ══ */
+  .search-bar { padding:12px 16px; background:var(--bg); }
+  .search-inner {
+    display:flex; align-items:center; gap:10px;
+    background:var(--card); border-radius:14px;
+    padding:10px 14px; box-shadow:0 2px 12px rgba(0,0,0,0.06);
+  }
+  .search-input {
+    flex:1; border:none; outline:none;
+    font-size:0.93rem; color:var(--text);
+    background:transparent; font-family:inherit;
+  }
+  .search-input::placeholder { color:var(--text-3); }
+  .search-clear {
+    width:20px; height:20px; background:var(--text-3);
+    border-radius:50%; color:#fff; font-size:0.7rem;
+    display:none; align-items:center; justify-content:center;
+    cursor:pointer; flex-shrink:0; border:none;
+  }
+  .search-clear.show { display:flex; }
+
+  /* ══ 分类胶囊 ══ */
+  .cats-wrap {
+    padding:0 16px 12px;
+    display:flex; gap:8px; overflow-x:auto; scrollbar-width:none;
+  }
+  .cats-wrap::-webkit-scrollbar { display:none; }
+  .cat-pill {
+    flex-shrink:0; padding:6px 14px; border-radius:50px;
+    font-size:0.8rem; font-weight:500;
+    background:var(--card); color:var(--text-2);
+    border:1.5px solid var(--border);
+    cursor:pointer; transition:all 0.18s; white-space:nowrap;
+  }
+  .cat-pill.active {
+    background:var(--primary); color:#fff; border-color:var(--primary);
+    box-shadow:0 4px 12px rgba(255,107,53,0.3);
+  }
+
+  /* ══ 结果栏 ══ */
+  .result-bar { padding:0 16px 8px; font-size:0.78rem; color:var(--text-3); }
+  .result-bar strong { color:var(--primary); }
+
+  /* ══ 分组标题 ══ */
+  .section-label {
+    font-size:0.72rem; font-weight:700; color:var(--text-3);
+    letter-spacing:0.05em; padding:12px 16px 6px;
+  }
+
+  /* ══ Q&A 列表行 ══ */
+  .qa-list { padding-bottom:32px; }
+  .qa-row {
+    display:flex; align-items:center; gap:12px;
+    background:var(--card); margin:0 16px 8px;
+    border-radius:16px; padding:14px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.04);
+    cursor:pointer; transition:all 0.18s; user-select:none;
+  }
+  .qa-row:active { transform:scale(0.98); }
+  .qa-num-wrap {
+    flex-shrink:0; width:30px; height:30px;
+    background:var(--tag-bg); border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .qa-num { font-size:0.7rem; font-weight:700; color:var(--primary); }
+  .qa-mid { flex:1; min-width:0; }
+  .qa-cat-tag {
+    font-size:0.67rem; font-weight:600;
+    color:var(--tag-color); background:var(--tag-bg);
+    padding:2px 7px; border-radius:20px;
+    display:inline-block; margin-bottom:4px;
+  }
+  .qa-q-text {
+    font-size:0.88rem; font-weight:600; color:var(--text);
+    line-height:1.45; display:-webkit-box;
+    -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+  }
+  .qa-chevron { flex-shrink:0; color:var(--text-3); font-size:0.9rem; }
+
+  /* ══ 空结果 ══ */
+  .empty { text-align:center; padding:60px 20px; color:var(--text-3); font-size:0.9rem; }
+  .empty .ei { font-size:3rem; margin-bottom:10px; }
+
+  /* ══ 内容卡片（入门 + 资源页用）══ */
+  .content-section { padding:12px 16px 4px; }
+  .content-card {
+    background:var(--card); border-radius:18px;
+    padding:16px; margin-bottom:12px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.04);
+  }
+  .content-card-title {
+    font-size:0.95rem; font-weight:700; color:var(--text);
+    margin-bottom:12px; display:flex; align-items:center; gap:6px;
+  }
+  .content-card p {
+    font-size:0.86rem; color:var(--text-2); line-height:1.75; margin-bottom:8px;
+  }
+  .content-card p:last-child { margin-bottom:0; }
+
+  /* 功能标签组 */
+  .feature-grid {
+    display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:4px;
+  }
+  .feature-item {
+    background:var(--tag-bg); border-radius:12px;
+    padding:10px 12px; font-size:0.82rem; color:var(--text-2);
+    line-height:1.4;
+  }
+  .feature-item span { font-size:1.1rem; display:block; margin-bottom:3px; }
+
+  /* 命令表格 */
+  .cmd-table { width:100%; border-collapse:collapse; margin-top:4px; }
+  .cmd-table tr:not(:last-child) td { border-bottom:1px solid var(--border); }
+  .cmd-table td { padding:8px 4px; font-size:0.82rem; vertical-align:middle; }
+  .cmd-table td:first-child { font-family:'SF Mono','Courier New',monospace; color:#E0401A; font-size:0.78rem; padding-right:12px; white-space:nowrap; }
+  .cmd-table td:last-child { color:var(--text-2); }
+
+  /* 资源链接 */
+  .res-item {
+    display:flex; align-items:center; gap:10px;
+    padding:10px 0; border-bottom:1px solid var(--border);
+    text-decoration:none;
+  }
+  .res-item:last-child { border-bottom:none; }
+  .res-icon {
+    width:36px; height:36px; border-radius:10px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.1rem; flex-shrink:0;
+  }
+  .res-text { flex:1; min-width:0; }
+  .res-name { font-size:0.88rem; font-weight:600; color:var(--text); margin-bottom:2px; }
+  .res-desc { font-size:0.76rem; color:var(--text-3); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .res-arrow { color:var(--text-3); font-size:0.85rem; flex-shrink:0; }
+
+  /* 平台入口列表 */
+  .platform-item {
+    display:flex; align-items:center; gap:10px;
+    padding:10px 0; border-bottom:1px solid var(--border);
+    text-decoration:none; color:inherit;
+  }
+  .platform-item:last-child { border-bottom:none; }
+  a.platform-item:active { opacity:0.7; }
+  .platform-badge {
+    background:var(--tag-bg); color:var(--primary);
+    font-size:0.73rem; font-weight:700;
+    padding:3px 9px; border-radius:20px; flex-shrink:0;
+  }
+  .platform-name { flex:1; font-size:0.87rem; font-weight:600; color:var(--text); }
+  .platform-desc { font-size:0.75rem; color:var(--text-3); margin-top:2px; }
+
+  /* ══ 详情页 ══ */
+  .detail-page { background:var(--bg); }
+  .detail-nav {
+    display:flex; align-items:center; gap:10px;
+    padding:52px 16px 14px; background:var(--card);
+    border-bottom:1px solid var(--border);
+    position:sticky; top:0; z-index:100;
+  }
+  .back-btn {
+    display:flex; align-items:center; gap:2px;
+    color:var(--primary); font-size:0.95rem; font-weight:600;
+    cursor:pointer; border:none; background:none;
+    padding:6px 10px 6px 2px; border-radius:8px; flex-shrink:0;
+  }
+  .back-btn:active { background:var(--tag-bg); }
+  .detail-nav-title {
+    flex:1; font-size:0.9rem; font-weight:600; color:var(--text);
+    overflow:hidden; white-space:nowrap; text-overflow:ellipsis;
+  }
+  .detail-body { padding:16px; }
+  .detail-q-card {
+    background:linear-gradient(135deg,#FF6B35 0%,#FF4500 100%);
+    border-radius:20px; padding:18px 20px; margin-bottom:14px;
+    box-shadow:0 8px 24px rgba(255,107,53,0.25);
+  }
+  .detail-q-meta { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+  .detail-q-num {
+    background:rgba(255,255,255,0.25); color:#fff;
+    font-size:0.7rem; font-weight:700; padding:3px 10px; border-radius:20px;
+  }
+  .detail-q-cat {
+    background:rgba(255,255,255,0.2); color:#fff;
+    font-size:0.7rem; font-weight:600; padding:3px 10px; border-radius:20px;
+  }
+  .detail-q-text { font-size:0.97rem; font-weight:700; color:#fff; line-height:1.55; }
+  .answer-card {
+    background:var(--card); border-radius:18px; padding:16px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.04);
+  }
+  .answer-label {
+    font-size:0.73rem; font-weight:700; color:var(--primary);
+    letter-spacing:0.06em; margin-bottom:14px;
+    display:flex; align-items:center; gap:6px;
+  }
+  .answer-label::after { content:''; flex:1; height:1px; background:var(--border); }
+  .answer-card p { font-size:0.87rem; color:var(--text-2); line-height:1.75; margin-bottom:10px; }
+  .answer-card p:last-child { margin-bottom:0; }
+
+  /* 详情内的步骤/提示/代码 */
+  .steps { list-style:none; margin:8px 0; }
+  .steps li {
+    display:flex; gap:10px; align-items:flex-start;
+    font-size:0.86rem; color:var(--text-2); line-height:1.6; margin-bottom:8px;
+  }
+  .step-dot {
+    flex-shrink:0; width:20px; height:20px;
+    background:var(--primary); color:#fff; border-radius:50%;
+    font-size:0.67rem; font-weight:700;
+    display:flex; align-items:center; justify-content:center; margin-top:2px;
+  }
+  .tip-box {
+    background:#FFF8F5; border-left:3px solid var(--primary);
+    border-radius:0 10px 10px 0; padding:10px 12px; margin:8px 0;
+    font-size:0.83rem; color:var(--text-2); line-height:1.65;
+  }
+  .warn-box {
+    background:#FFFBEC; border-left:3px solid #F0A500;
+    border-radius:0 10px 10px 0; padding:10px 12px; margin:8px 0;
+    font-size:0.83rem; color:var(--text-2); line-height:1.65;
+  }
+  .good-box {
+    background:#F0FFF4; border-left:3px solid #34C759;
+    border-radius:0 10px 10px 0; padding:10px 12px; margin:8px 0;
+    font-size:0.83rem; color:var(--text-2); line-height:1.65;
+  }
+  .code-block {
+    background:var(--code-bg); border-radius:12px;
+    padding:12px 14px; margin:8px 0; position:relative;
+  }
+  .code-block pre {
+    color:var(--code-text);
+    font-family:'SF Mono','JetBrains Mono','Courier New',monospace;
+    font-size:0.78rem; line-height:1.65; overflow-x:auto; white-space:pre;
+  }
+  .copy-btn {
+    position:absolute; top:8px; right:8px;
+    background:rgba(255,255,255,0.12); border:none;
+    color:rgba(255,255,255,0.7); font-size:0.7rem;
+    padding:3px 8px; border-radius:6px; cursor:pointer;
+  }
+  .copy-btn:active { background:rgba(255,255,255,0.22); }
+  code {
+    background:#F0F0F2; color:#E0401A;
+    font-family:'SF Mono',monospace;
+    font-size:0.82em; padding:1px 5px; border-radius:5px;
+  }
+  mark { background:#FFE566; color:inherit; border-radius:3px; padding:0 2px; }
+
+  /* 上下翻 */
+  .detail-nav-btns { display:flex; gap:8px; padding:12px 16px 28px; }
+  .nav-btn {
+    flex:1; padding:12px; background:var(--card); border-radius:14px;
+    border:1.5px solid var(--border); font-size:0.83rem; color:var(--text-2);
+    cursor:pointer; text-align:center; transition:all 0.15s; font-family:inherit;
+  }
+  .nav-btn:active { background:var(--tag-bg); border-color:var(--primary); color:var(--primary); }
+  .nav-btn:disabled { opacity:0.3; pointer-events:none; }
+
+  /* 底部间距 */
+  .pb { padding-bottom:32px; }
+</style>
+</head>
+<body>
+<div class="pages" id="pages">
+
+<!-- ══════════════════════════════
+     列表页
+══════════════════════════════ -->
+<div class="page" id="listPage">
+
+  <!-- Banner -->
+  <div class="banner">
+    <div class="banner-top">
+      <div class="banner-emoji">🦞</div>
+      <div class="banner-ver">v1.2</div>
+    </div>
+    <div class="banner-title">龙虾宝典</div>
+    <div class="banner-sub">ArkClaw · OpenClaw 完全指南 · 社群共建</div>
+    <div class="banner-stats">
+      <div class="stat-chip">📖 45 个经典 Q&A</div>
+      <div class="stat-chip">🚀 3 种安装方式</div>
+      <div class="stat-chip">🧩 Skills 系统</div>
+    </div>
+  </div>
+
+  <!-- 主 Tab -->
+  <div class="main-tabs" id="mainTabs">
+    <div class="main-tab active" data-tab="qa">❓ 问题速查</div>
+    <div class="main-tab" data-tab="start">🚀 新手入门</div>
+    <div class="main-tab" data-tab="skills">🧩 Skills</div>
+    <div class="main-tab" data-tab="res">🔗 资源导航</div>
+  </div>
+
+  <!-- ── Tab: 问题速查 ── -->
+  <div class="tab-content active" id="tab-qa">
+    <div class="search-bar">
+      <div class="search-inner">
+        <span>🔍</span>
+        <input class="search-input" id="searchInput" type="search"
+          placeholder="搜索关键词：API Key、授权、重启…" autocomplete="off"/>
+        <button class="search-clear" id="clearBtn" onclick="clearSearch()">✕</button>
+      </div>
+    </div>
+    <div class="cats-wrap" id="cats">
+      <div class="cat-pill active" data-cat="全部">全部 45</div>
+      <div class="cat-pill" data-cat="报错修复">🔧 报错修复</div>
+      <div class="cat-pill" data-cat="飞书配置">🐦 飞书配置</div>
+      <div class="cat-pill" data-cat="权限问题">🔑 权限问题</div>
+      <div class="cat-pill" data-cat="API与计费">💰 API与计费</div>
+      <div class="cat-pill" data-cat="安装部署">🚀 安装部署</div>
+      <div class="cat-pill" data-cat="使用技巧">⚡ 使用技巧</div>
+    </div>
+    <div class="result-bar" id="resultBar"></div>
+    <div class="qa-list" id="qaList"></div>
+  </div>
+
+  <!-- ── Tab: 新手入门 ── -->
+  <div class="tab-content" id="tab-start">
+    <div class="content-section pb">
+
+      <div class="content-card">
+        <div class="content-card-title">🦞 OpenClaw 是什么？</div>
+        <p>OpenClaw（原名 Moltbot、Clawdbot）是一个<strong>本地运行的 AI 个人助理</strong>，可以通过微信、飞书、Telegram、WhatsApp 等聊天工具控制。</p>
+        <p>简单理解：给你一种做皇帝的感觉，动动嘴就能让 AI 帮你干活，情绪价值拉满。</p>
+        <div class="feature-grid">
+          <div class="feature-item"><span>📧</span>收发邮件、管理日历</div>
+          <div class="feature-item"><span>🌐</span>浏览网页、搜索截图</div>
+          <div class="feature-item"><span>📝</span>写代码、改文档、管项目</div>
+          <div class="feature-item"><span>🔧</span>通过 Skills 扩展无限可能</div>
+        </div>
+        <div class="tip-box" style="margin-top:10px;">💡 核心理念：好的 OpenClaw = <strong>调教 + 优化 + 记忆系统</strong>。稳定 &gt; 功能多！</div>
+      </div>
+
+      <div class="content-card">
+        <div class="content-card-title">✅ 方法一：WSL2 安装（Windows 推荐）</div>
+        <p>官方强烈建议在 Windows 上使用 WSL2，直接安装可能有兼容性问题。</p>
+        <div class="steps">
+          <li class="steps"><span class="step-dot">1</span><span>以管理员身份打开 PowerShell，启用 WSL2：</span></li>
+        </div>
+        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre>wsl --install</pre></div>
+        <p>重启电脑后，WSL2 会自动安装 Ubuntu。</p>
+        <div class="steps">
+          <li class="steps"><span class="step-dot">2</span><span>打开 Ubuntu 终端，安装 OpenClaw：</span></li>
+        </div>
+        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre>curl -fsSL https://openclaw.ai/install.sh | bash
+openclaw onboard --install-daemon
+openclaw gateway status
+openclaw dashboard</pre></div>
+      </div>
+
+      <div class="content-card">
+        <div class="content-card-title">⚡ 方法二：Windows 直接安装</div>
+        <div class="warn-box">⚠️ 需要 Node.js 22.x 或更高版本。访问 nodejs.org 下载 LTS 版本安装。</div>
+        <p>打开 PowerShell（不是 CMD），运行：</p>
+        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre>iwr -useb https://openclaw.ai/install.ps1 | iex</pre></div>
+        <p>然后运行安装向导：</p>
+        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre>openclaw onboard --install-daemon</pre></div>
+      </div>
+
+      <div class="content-card">
+        <div class="content-card-title">📦 方法三：npm 手动安装</div>
+        <p>如果安装脚本出现问题，可以手动用 npm 安装：</p>
+        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre>npm install -g openclaw@latest
+openclaw onboard --install-daemon</pre></div>
+      </div>
+
+      <div class="content-card">
+        <div class="content-card-title">📋 常用命令速查表</div>
+        <table class="cmd-table">
+          <tr><td>openclaw gateway start</td><td>启动服务</td></tr>
+          <tr><td>openclaw gateway stop</td><td>停止服务</td></tr>
+          <tr><td>openclaw gateway restart</td><td>重启服务</td></tr>
+          <tr><td>openclaw gateway status</td><td>查看状态</td></tr>
+          <tr><td>openclaw dashboard</td><td>打开控制台</td></tr>
+          <tr><td>openclaw update</td><td>更新版本</td></tr>
+          <tr><td>openclaw doctor</td><td>诊断问题</td></tr>
+          <tr><td>openclaw logs --follow</td><td>查看实时日志</td></tr>
+          <tr><td>openclaw channels status</td><td>检查频道状态</td></tr>
+          <tr><td>openclaw cron list</td><td>查看定时任务</td></tr>
+          <tr><td>openclaw config get</td><td>查看配置</td></tr>
+        </table>
+      </div>
+
+      <div class="content-card">
+        <div class="content-card-title">⚠️ 新手必看：常见坑</div>
+        <div class="warn-box">🖥️ <strong>不要用 MacBook 当 24 小时服务器</strong>，建议部署到云服务器（阿里云、腾讯云等）。</div>
+        <div class="tip-box">😴 <strong>防止 Mac 休眠断联：</strong>只要终端开着就不会进入休眠：<br><code>caffeinate -i</code></div>
+        <div class="warn-box">🛡️ <strong>注意安全：</strong>官方插件网站有很多病毒 Skill，安装时要注意来源！</div>
+        <div class="tip-box">🔑 <strong>openclaw 命令找不到？</strong>执行 <code>npm prefix -g</code> 获取路径，将该路径添加到系统 PATH 环境变量。</div>
+        <div class="warn-box">💻 <strong>WSL2 安装后无法启动？</strong>确保 BIOS 中已启用虚拟化，且 Windows 版本为 1903 及以上。</div>
+      </div>
+
+      <div class="content-card">
+        <div class="content-card-title">🔧 首次配置：接入飞书</div>
+        <div class="steps" style="list-style:none;margin:0;">
+          <li style="display:flex;gap:10px;align-items:flex-start;font-size:0.86rem;color:var(--text-2);line-height:1.6;margin-bottom:8px;"><span class="step-dot">1</span><span>在飞书开放平台创建企业自建应用</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;font-size:0.86rem;color:var(--text-2);line-height:1.6;margin-bottom:8px;"><span class="step-dot">2</span><span>获取 App ID 和 App Secret</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;font-size:0.86rem;color:var(--text-2);line-height:1.6;margin-bottom:8px;"><span class="step-dot">3</span><span>配置事件订阅和回调地址（长链接模式）</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;font-size:0.86rem;color:var(--text-2);line-height:1.6;margin-bottom:8px;"><span class="step-dot">4</span><span>在 OpenClaw 中配置飞书通道，执行配对</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;font-size:0.86rem;color:var(--text-2);line-height:1.6;"><span class="step-dot">5</span><span>发布应用，给机器人发消息测试</span></li>
+        </div>
+        <div class="good-box" style="margin-top:10px;">📹 推荐先看视频教程：「30 分钟把 OpenClaw 在飞书上配到可用」</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Tab: Skills ── -->
+  <div class="tab-content" id="tab-skills">
+    <div class="content-section pb">
+
+      <div class="content-card">
+        <div class="content-card-title">🧩 什么是 Skills？</div>
+        <p>Skills（技能）就像给龙虾加上了利索的手和眼，必不可少！通过安装不同的 Skill，龙虾可以收发邮件、操控浏览器、管理文件等。</p>
+        <div class="good-box">💡 好用的 Skill = 给龙虾配置<strong>手、脚、耳朵</strong>。优先搞 Skills，再考虑多 Agent。</div>
+      </div>
+
+      <div class="content-card">
+        <div class="content-card-title">📦 安装 Skills</div>
+        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre># 从 ClawHub 安装技能
+openclaw skills install [技能名]
+
+# 查看已安装技能
+openclaw skills list
+
+# 禁用某个技能
+claw disable [技能名]</pre></div>
+        <div class="warn-box">⚠️ 遇到 <code>Rate limit exceeded</code>？暂停 5-10 分钟后重试，或直接从 ClawHub 下载 ZIP 包手动解压到 <code>~/.openclaw/skills</code>。</div>
+      </div>
+
+      <div class="content-card">
+        <div class="content-card-title">🛒 Skills 市场</div>
+        <div class="platform-item">
+          <div>
+            <div class="platform-name">🏪 ClawHub 官方市场</div>
+            <div class="platform-desc">5400+ 技能，官方出品</div>
+          </div>
+          <div class="res-arrow">›</div>
+        </div>
+        <div class="platform-item">
+          <div>
+            <div class="platform-name">⭐ Awesome OpenClaw Skills</div>
+            <div class="platform-desc">GitHub 精选技能合集</div>
+          </div>
+          <div class="res-arrow">›</div>
+        </div>
+        <div class="platform-item">
+          <div>
+            <div class="platform-name">📚 一键收录文章知识库 Skill</div>
+            <div class="platform-desc">让龙虾帮你构建个人知识库</div>
+          </div>
+          <div class="res-arrow">›</div>
+        </div>
+        <div class="platform-item">
+          <div>
+            <div class="platform-name">🔒 麻小安全策略 Skill v1.2</div>
+            <div class="platform-desc">社区精选安全配置技能</div>
+          </div>
+          <div class="res-arrow">›</div>
+        </div>
+        <div class="platform-item">
+          <div>
+            <div class="platform-name">🐦 飞书官方插件一键转换 Skill</div>
+            <div class="platform-desc">快速接入飞书生态</div>
+          </div>
+          <div class="res-arrow">›</div>
+        </div>
+      </div>
+
+      <div class="content-card">
+        <div class="content-card-title">🎬 Skills 视频教程</div>
+        <div class="platform-item">
+          <div class="platform-badge">1min</div>
+          <div>
+            <div class="platform-name">Skills 入门教程</div>
+            <div class="platform-desc">YouTube · 快速上手</div>
+          </div>
+        </div>
+        <div class="platform-item">
+          <div class="platform-badge">实用</div>
+          <div>
+            <div class="platform-name">5 个实用 Skills 推荐</div>
+            <div class="platform-desc">YouTube · 效率必备</div>
+          </div>
+        </div>
+        <div class="platform-item">
+          <div class="platform-badge">进阶</div>
+          <div>
+            <div class="platform-name">Skills 开发教程</div>
+            <div class="platform-desc">YouTube · 自己写 Skill</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-card">
+        <div class="content-card-title">📖 官方文档</div>
+        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre>https://docs.openclaw.ai/cli/skills</pre></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Tab: 资源导航 ── -->
+  <div class="tab-content" id="tab-res">
+    <div class="content-section pb">
+
+      <div class="content-card">
+        <div class="content-card-title">🚀 各平台部署入口</div>
+        <a class="platform-item" href="https://www.volcengine.com/product/arkclaw" target="_blank" rel="noopener">
+          <div class="platform-badge">推荐</div>
+          <div style="flex:1">
+            <div class="platform-name">🌋 火山引擎 ArkClaw</div>
+            <div class="platform-desc">9.9 Lite 套餐 · 性价比最高</div>
+          </div>
+          <span class="res-arrow">›</span>
+        </a>
+        <a class="platform-item" href="https://cloud.tencent.com/act/pro/openclaw" target="_blank" rel="noopener">
+          <div class="platform-badge">稳定</div>
+          <div style="flex:1">
+            <div class="platform-name">🐧 腾讯云</div>
+            <div class="platform-desc">cloud.tencent.com/act/pro/openclaw</div>
+          </div>
+          <span class="res-arrow">›</span>
+        </a>
+        <a class="platform-item" href="https://www.aliyun.com/activity/ecs/clawdbot" target="_blank" rel="noopener">
+          <div class="platform-badge">稳定</div>
+          <div style="flex:1">
+            <div class="platform-name">☁️ 阿里云</div>
+            <div class="platform-desc">aliyun.com/activity/ecs/clawdbot</div>
+          </div>
+          <span class="res-arrow">›</span>
+        </a>
+        <a class="platform-item" href="https://autoglm.zhipuai.cn/autoclaw/" target="_blank" rel="noopener">
+          <div class="platform-badge">国产</div>
+          <div style="flex:1">
+            <div class="platform-name">🤖 智谱 AutoClaw</div>
+            <div class="platform-desc">autoglm.zhipuai.cn/autoclaw</div>
+          </div>
+          <span class="res-arrow">›</span>
+        </a>
+        <a class="platform-item" href="https://www.kimi.com/bot" target="_blank" rel="noopener">
+          <div class="platform-badge">国产</div>
+          <div style="flex:1">
+            <div class="platform-name">🌙 Kimi Claw</div>
+            <div class="platform-desc">kimi.com/bot</div>
+          </div>
+          <span class="res-arrow">›</span>
+        </a>
+        <a class="platform-item" href="https://cloud.baidu.com/product/BCC/moltbot.html" target="_blank" rel="noopener">
+          <div class="platform-badge">国产</div>
+          <div style="flex:1">
+            <div class="platform-name">🔵 百度云</div>
+            <div class="platform-desc">cloud.baidu.com</div>
+          </div>
+          <span class="res-arrow">›</span>
+        </a>
+        <a class="platform-item" href="https://www.huaweicloud.com/solution/implementations/deploying-openclaw-agents.html" target="_blank" rel="noopener">
+          <div class="platform-badge">国产</div>
+          <div style="flex:1">
+            <div class="platform-name">🟠 华为云</div>
+            <div class="platform-desc">huaweicloud.com</div>
+          </div>
+          <span class="res-arrow">›</span>
+        </a>
+        <a class="platform-item" href="https://copaw.agentscope.io/" target="_blank" rel="noopener">
+          <div class="platform-badge">海外</div>
+          <div style="flex:1">
+            <div class="platform-name">🤖 Copaw（阿里通义）</div>
+            <div class="platform-desc">copaw.agentscope.io</div>
+          </div>
+          <span class="res-arrow">›</span>
+        </a>
+      </div>
+
+      <div class="content-card">
+        <div class="content-card-title">📚 学习教程</div>
+        <a class="platform-item" href="https://docs.openclaw.ai" target="_blank" rel="noopener">
+          <div class="platform-badge">官方</div>
+          <div style="flex:1">
+            <div class="platform-name">OpenClaw 官方文档</div>
+            <div class="platform-desc">docs.openclaw.ai</div>
+          </div>
+          <span class="res-arrow">›</span>
+        </a>
+        <a class="platform-item" href="https://waytoagi.feishu.cn/wiki/CCR4wl3upi6dF9kVE5YcAcGcnlU" target="_blank" rel="noopener">
+          <div class="platform-badge">社区</div>
+          <div style="flex:1">
+            <div class="platform-name">WaytoAGI 教程</div>
+            <div class="platform-desc">waytoagi.feishu.cn</div>
+          </div>
+          <span class="res-arrow">›</span>
+        </a>
+        <a class="platform-item" href="https://yunyinghui.feishu.cn/wiki/WhelwZnxQi55mpkOzatc3Xran5b" target="_blank" rel="noopener">
+          <div class="platform-badge">社区</div>
+          <div style="flex:1">
+            <div class="platform-name">万象 AI 教程</div>
+            <div class="platform-desc">yunyinghui.feishu.cn</div>
+          </div>
+          <span class="res-arrow">›</span>
+        </a>
+        <a class="platform-item" href="https://clawd.org.cn/" target="_blank" rel="noopener">
+          <div class="platform-badge">中文</div>
+          <div style="flex:1">
+            <div class="platform-name">OpenClaw 中文社区</div>
+            <div class="platform-desc">clawd.org.cn</div>
+          </div>
+          <span class="res-arrow">›</span>
+        </a>
+        <a class="platform-item" href="https://openclaw101.dev/zh" target="_blank" rel="noopener">
+          <div class="platform-badge">中文</div>
+          <div style="flex:1">
+            <div class="platform-name">OpenClaw 101</div>
+            <div class="platform-desc">openclaw101.dev/zh</div>
+          </div>
+          <span class="res-arrow">›</span>
+        </a>
+        <a class="platform-item" href="https://instreet.coze.site/" target="_blank" rel="noopener">
+          <div class="platform-badge">社区</div>
+          <div style="flex:1">
+            <div class="platform-name">InStreet AI Agent 社区</div>
+            <div class="platform-desc">由 Agent 发帖互动的中文社区</div>
+          </div>
+          <span class="res-arrow">›</span>
+        </a>
+      </div>
+
+      <div class="content-card">
+        <div class="content-card-title">🐦 飞书相关资源</div>
+        <a class="platform-item" href="https://larkcommunity.feishu.cn/wiki/LDmXwEVhJitBa5kU0mjc16VKneb" target="_blank" rel="noopener">
+          <div class="platform-badge">必看</div>
+          <div style="flex:1">
+            <div class="platform-name">飞书官方配置文档</div>
+            <div class="platform-desc">larkcommunity.feishu.cn</div>
+          </div>
+          <span class="res-arrow">›</span>
+        </a>
+        <a class="platform-item" href="https://bytedance.larkoffice.com/docx/MFK7dDFLFoVlOGxWCv5cTXKmnMh" target="_blank" rel="noopener">
+          <div class="platform-badge">插件</div>
+          <div style="flex:1">
+            <div class="platform-name">飞书插件下载</div>
+            <div class="platform-desc">bytedance.larkoffice.com</div>
+          </div>
+          <span class="res-arrow">›</span>
+        </a>
+        <a class="platform-item" href="https://bytedance.feishu.cn/minutes/obcnaqyk4yr91i4u9l2986dk" target="_blank" rel="noopener">
+          <div class="platform-badge">视频</div>
+          <div style="flex:1">
+            <div class="platform-name">30 分钟配置飞书视频教程</div>
+            <div class="platform-desc">bytedance.feishu.cn/minutes</div>
+          </div>
+          <span class="res-arrow">›</span>
+        </a>
+      </div>
+
+      <div class="content-card">
+        <div class="content-card-title">💬 扣子接入</div>
+        <a class="platform-item" href="https://www.coze.cn/studio?invite_code=7db5a7af987c4282b0fc7cef7a4984b6" target="_blank" rel="noopener">
+          <div class="platform-badge">入口</div>
+          <div style="flex:1">
+            <div class="platform-name">扣子 Coze 接入入口</div>
+            <div class="platform-desc">coze.cn/studio</div>
+          </div>
+          <span class="res-arrow">›</span>
+        </a>
+        <a class="platform-item" href="https://bytedance.larkoffice.com/docx/DYfIdfqfSo4rwpxGPCEcH3hznwg" target="_blank" rel="noopener">
+          <div class="platform-badge">教程</div>
+          <div style="flex:1">
+            <div class="platform-name">扣子接入教程</div>
+            <div class="platform-desc">bytedance.larkoffice.com</div>
+          </div>
+          <span class="res-arrow">›</span>
+        </a>
+      </div>
+
+      <div class="content-card" style="background:linear-gradient(135deg,#FFF8F5,#FFF3EE);">
+        <div class="content-card-title">🦞 最后的话</div>
+        <p>OpenClaw 是个好东西，但需要<strong>耐心调教</strong>。不要急于求成，先把基础功能玩熟，再考虑进阶。</p>
+        <p style="color:var(--primary);font-weight:700;">记住：稳定 &gt; 功能多。祝你玩虾成功！🎉</p>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /listPage -->
+
+<!-- ══════════════════════════════
+     详情页
+══════════════════════════════ -->
+<div class="page detail-page" id="detailPage">
+  <div class="detail-nav">
+    <button class="back-btn" onclick="goBack()">‹ 返回</button>
+    <div class="detail-nav-title" id="detailNavTitle"></div>
+  </div>
+  <div class="detail-body">
+    <div class="detail-q-card">
+      <div class="detail-q-meta">
+        <span class="detail-q-num" id="detailNum"></span>
+        <span class="detail-q-cat" id="detailCat"></span>
+      </div>
+      <div class="detail-q-text" id="detailQ"></div>
+    </div>
+    <div class="answer-card">
+      <div class="answer-label">💡 解决方案</div>
+      <div id="detailA"></div>
+    </div>
+  </div>
+  <div class="detail-nav-btns">
+    <button class="nav-btn" id="prevBtn" onclick="navItem(-1)">← 上一题</button>
+    <button class="nav-btn" id="nextBtn" onclick="navItem(1)">下一题 →</button>
+  </div>
+</div>
+
+</div><!-- /pages -->
+
+<script>
+const QA = [
+  {id:1,cat:"API与计费",q:"API rate limit reached / 已达到 API 速率限制，这是什么情况，怎么解决？",a:`<p>您订阅的套餐达到了请求限额，<strong>等待 5 小时</strong>后配额自动刷新。</p><div class="tip-box">📌 可在「方舟控制台 → 开通管理」查看配额详情及具体刷新时间。</div><p>这不是账号异常，是订阅套餐的频率限制，等一等就恢复了。</p>`},
+  {id:2,cat:"API与计费",q:"购买的 ArkClaw 套餐到期如何续费以及如何升级？",a:`<ul class="steps"><li><span class="step-dot">1</span><span><strong>Coding Plan Lite</strong>：免费获得 7 天体验，到期 ArkClaw 被删除，数据保留 24 小时。</span></li><li><span class="step-dot">2</span><span><strong>Coding Plan Pro</strong>：可畅享全部服务，到期后数据同样保留 24 小时。</span></li><li><span class="step-dot">3</span><span>续费/升级：访问「方舟 Coding Plan 活动」或「方舟控制台 → 开通管理」，<strong>升级后立即生效</strong>。</span></li></ul>`},
+  {id:3,cat:"安装部署",q:"如何安装火山龙虾？有没有视频手把手教学？",a:`<div class="good-box">🎬 <strong>视频版：</strong>bytedance.feishu.cn/minutes/obcnaqyk4yr91i4u9l2986dk</div><div class="tip-box">📖 <strong>文档版：</strong>「立省 500！30 分钟把 OpenClaw 在飞书上配到可用」</div><p>推荐先看视频，跟着操作，30 分钟内可以配好。</p>`},
+  {id:4,cat:"安装部署",q:"从 OpenClaw 2026.3.2 内置社区版插件升级到最新官方飞书插件，是否可以直接安装覆盖？",a:`<div class="good-box">✅ 可以直接覆盖安装，不会有冲突。新插件会自动禁用原来的内置插件。</div><div class="warn-box">⚠️ 若安装时提示版本不匹配，需确认 OpenClaw 版本符合要求，或回滚到兼容版本。安装后若插件加载失败，可能是缺少依赖，需安装依赖并重新启动服务。</div>`},
+  {id:5,cat:"权限问题",q:"云文档、多维表格权限全部打开，为何机器人仍提示无权限或返回 400/404 报错？",a:`<div class="warn-box">⚠️ 原因：旧版飞书插件对文档操作有 Bug。</div><div class="good-box">✅ 解决方案：更新飞书插件到最新版本即可。</div>`},
+  {id:6,cat:"飞书配置",q:"触发 /feishu auth 后，授权卡片弹不出来，或点击后提示过期，如何解决？",a:`<ul class="steps"><li><span class="step-dot">1</span><span>飞书对话里输入 <code>/feishu doctor</code> 检查授权状态</span></li><li><span class="step-dot">2</span><span>前往「开放平台 → 权限管理 → 用户身份权限」确认权限全部开通</span></li><li><span class="step-dot">3</span><span>执行 <code>feishu-plugin-onboard update</code> 更新插件，再重启 OpenClaw</span></li><li><span class="step-dot">4</span><span>云服务器需检查防火墙端口是否开放（如 Web UI 面板端口）</span></li><li><span class="step-dot">5</span><span>若 openclaw.json 报「Unrecognized key: feishu」，执行 <code>openclaw doctor --fix</code></span></li></ul>`},
+  {id:7,cat:"飞书配置",q:"飞书个人版用户如何将 ArkClaw 拉入外部群聊？为何群成员添加里搜不到机器人？",a:`<div class="warn-box">⚠️ 飞书<strong>个人版无法</strong>将应用拉入外部群，只能进只有自己一个人的内部群。</div><div class="tip-box">💡 机器人不是"成员"，需要进入「群聊管理 → 机器人」里添加，而不是搜索成员。</div>`},
+  {id:8,cat:"报错修复",q:"机器人能创建飞书云文档和多维表格，但无法往里面写入内容（报错 Unexpected non-whitespace character after JSON）",a:`<div class="tip-box">🔴 <strong>原因1：权限缺失</strong> — 登录飞书开放平台 → 应用管理 → 权限管理，添加 <code>docx:document</code>、<code>drive:drive</code>、<code>docx:document.block:convert</code> 并提交审核。</div><div class="tip-box">🟡 <strong>原因2：模型理解偏差</strong> — 换个指令让它重新尝试，或更换更好的模型。</div>`},
+  {id:9,cat:"飞书配置",q:"事件配置时一直提示「未检测到应用连接信息」，无法保存长连接模式怎么处理？",a:`<p>原因：龙虾未启动，或消息渠道配置有问题。</p><div class="code-block"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre>openclaw gateway status   # 查看 gateway 状态
+openclaw logs --follow    # 查看网关日志</pre></div><div class="tip-box">💡 返回「飞书消息渠道配置成功」提示才算真正完成。</div>`},
+  {id:10,cat:"使用技巧",q:"在飞书群聊中，如何让机器人的回复在一个消息中流式追加，而不是分成多条发送？",a:`<div class="code-block"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre>openclaw config set channels.feishu.streaming true
+openclaw config set channels.feishu.footer.elapsed true
+openclaw config set channels.feishu.footer.status true</pre></div><div class="tip-box">📌 也可修改 <code>channels.feishu.textChunkLimit</code>（默认 2000，最高 3000）增加单条消息长度。</div>`},
+  {id:11,cat:"报错修复",q:"群聊中因拉取历史消息过多，报错 400 Total tokens of image and text exceed max message tokens",a:`<p>原因：图片+文本编码后的总 token 数超过了模型上下文限制。</p><div class="good-box">✅ 输入 <code>/new</code> 开启新对话，或重启网关清除上下文。等待 5 小时后配额也会刷新。</div>`},
+  {id:12,cat:"报错修复",q:"切换为 Kimi-k2-thinking 或 Doubao 模型后，OpenClaw 仍显示 ark-code-latest 甚至报 404 UnsupportedModel",a:`<p>完成模型修改后，执行以下命令重启服务使配置生效：</p><div class="code-block"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre>openclaw gateway restart</pre></div>`},
+  {id:13,cat:"报错修复",q:"配置 API Key 后一直报错 401 The API key format is incorrect 或 No API key found for provider anthropic",a:`<p><strong>方案1：命令行重新配置</strong></p><div class="code-block"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre>openclaw config set models.providers.ark.apiKey "你的新API Key"
+openclaw gateway restart</pre></div><p><strong>方案2：Web UI 重新配置</strong></p><ul class="steps"><li><span class="step-dot">1</span><span>执行 <code>openclaw dashboard</code> 打开 Web UI</span></li><li><span class="step-dot">2</span><span>Settings → Config → Authentication → Raw 模式</span></li><li><span class="step-dot">3</span><span>找到 <code>models.providers.ark.apiKey</code> 字段，替换为正确的 API Key，保存重启</span></li></ul>`},
+  {id:14,cat:"API与计费",q:"购买了火山引擎 Coding Plan，到底是按天、按次数，还是按 Token 消耗计算？",a:`<div class="good-box">💡 <strong>计费方式：按订阅周期 + 请求次数计费。</strong><br>不是按天、也不是按 Token，订阅期内有固定的请求次数配额。</div><p>具体配额查看「方舟控制台 → 开通管理 → 套餐概览」。</p>`},
+  {id:15,cat:"报错修复",q:"启动时提示网关服务启动失败，RPC 连接被拒绝（unauthorized 或 ECONNREFUSED），如何排查？",a:`<ul class="steps"><li><span class="step-dot">1</span><span>执行 <code>systemctl status clawdbot-gateway</code> 查看状态，失败则 <code>sudo systemctl start clawdbot-gateway</code></span></li><li><span class="step-dot">2</span><span>验证端口：<code>lsof -i :8080</code>（Mac/Linux）或 <code>netstat -ano | findstr :8080</code>（Windows）</span></li><li><span class="step-dot">3</span><span>核对防火墙/安全组已允许 111、8080 端口出入流量</span></li><li><span class="step-dot">4</span><span>快速修复：<code>openclaw gateway restart</code> / <code>openclaw doctor</code></span></li></ul>`},
+  {id:16,cat:"安装部署",q:"Windows npm 安装报 ENOENT syscall spawn git，Mac 报 EACCES: permission denied，如何修复？",a:`<p><strong>Windows：</strong>安装 Git for Windows，勾选「添加到系统 PATH」，重启终端后重新安装。</p><p><strong>Mac：</strong></p><div class="code-block"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre>mkdir -p ~/.npm-global && npm config set prefix '~/.npm-global' \
+&& echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.zshrc \
+&& source ~/.zshrc</pre></div><div class="tip-box">💡 建议 Node.js 使用 18 及以上版本，用 nvm 管理版本可从根源避免权限问题。</div>`},
+  {id:17,cat:"报错修复",q:"openclaw.json 报错 Unrecognized key: \"feishu\"，如何使用 openclaw doctor --fix 修复？",a:`<div class="code-block"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre>openclaw doctor --fix</pre></div><div class="tip-box">如果自动修复不成功：手动打开配置文件，搜索 <code>feishu</code> 关键词，找到对应行直接删除；或用 Claude Code 辅助修复。</div>`},
+  {id:18,cat:"安装部署",q:"在火山引擎 ECS 云服务器部署后，无法打开 Web UI 面板，是否需要配置防火墙端口透传？",a:`<p>龙虾网关默认监听<strong>本地地址</strong>，外部访问需要两步：</p><ul class="steps"><li><span class="step-dot">1</span><span>在云服务器安全组中<strong>开放对应端口</strong>（如 8080）</span></li><li><span class="step-dot">2</span><span>配置<strong>本地代理转发</strong>，将外部流量转发到本地地址</span></li></ul>`},
+  {id:19,cat:"飞书配置",q:"在终端执行配对命令后，飞书端没有弹出确认框，导致配对码失效过期，如何重新触发？",a:`<p><strong>方法1：重启网关</strong></p><div class="code-block"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre>openclaw gateway restart
+# 给机器人发任意消息后执行：
+openclaw pairing approve feishu [新配对码]</pre></div><p><strong>方法2：重启飞书渠道</strong></p><div class="code-block"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre>openclaw channels disable feishu
+openclaw channels enable feishu</pre></div><div class="warn-box">⚠️ 配对码有效期 5-10 分钟。如仍无效，执行 <code>openclaw config clear</code> 清除旧配对缓存。</div>`},
+  {id:20,cat:"使用技巧",q:"如何让龙虾具备浏览器能力去读取小红书、B 站评论、微信公众号等，并绕过反爬验证码？",a:`<div class="warn-box">⚠️ 云端龙虾很难实现反爬绕过。</div><div class="tip-box">💡 <strong>本地龙虾</strong>可以使用浏览器 relay 控制，模拟真人操控浏览器来读取这些平台内容。</div>`},
+  {id:21,cat:"报错修复",q:"龙虾调用即梦 (Jimeng) API 生图后，为何只返回 Base64 代码或本地路径，而不是直接发图到飞书？",a:`<ul class="steps"><li><span class="step-dot">1</span><span>确认飞书机器人已开通 <code>im:message</code>、<code>file:write</code> 等权限</span></li><li><span class="step-dot">2</span><span>将 Base64 转为二进制流，通过 <code>/api/v2/files/upload</code> 上传到飞书，获取 <code>file_key</code></span></li><li><span class="step-dot">3</span><span>构造飞书媒体消息：<code>{"msg_type":"image","content":{"image_key":"file_key"}}</code></span></li></ul>`},
+  {id:22,cat:"飞书配置",q:"飞书如何配置多个龙虾？或者多 Agent？",a:`<div class="warn-box">⚠️ 多 Agent 不稳定，新手<strong>没必要配置多个</strong>！先玩一个，会了再考虑多个。</div><ul class="steps"><li><span class="step-dot">1</span><span>通过命令行<strong>创建独立智能体</strong>，每个拥有独立工作目录</span></li><li><span class="step-dot">2</span><span>在 gateway 配置中为每个智能体设置<strong>独立的网关和名称映射</strong></span></li><li><span class="step-dot">3</span><span>为每个智能体<strong>单独创建飞书企业自建应用</strong>，分别获取 appId 和 appSecret</span></li></ul><div class="tip-box">📌 参考：「OpenClaw 多 Agent 飞书 Bot 完整配置指南」</div>`},
+  {id:23,cat:"使用技巧",q:"机器人如何直接读取群里上传的 Word 附件、.xlsx 表格，以及飞书妙记的语音转录文本？",a:`<p><strong>Word (.docx)：</strong></p><div class="code-block"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre>from docx import Document
+def read_word(path):
+    doc = Document(path)
+    return '\\n'.join([p.text for p in doc.paragraphs])</pre></div><p><strong>Excel (.xlsx)：</strong></p><div class="code-block"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre>import pandas as pd
+print(pd.read_excel("file.xlsx").to_string())</pre></div><div class="warn-box">⚠️ 飞书妙记需申请 <code>minutes:readonly</code> 权限。推荐：手动导出妙记文本 → 上传为 .txt/.docx → Bot 读取</div>`},
+  {id:24,cat:"报错修复",q:"使用 clawhub 下载安装技能时，一直报 Rate limit exceeded，有什么方式可以绕过？",a:`<ul class="steps"><li><span class="step-dot">1</span><span>暂停 5-10 分钟后，<code>openclaw skills install [技能名]</code> 重试，一次只装一个</span></li><li><span class="step-dot">2</span><span>从 ClawHub 网站直接下载 ZIP，解压到 <code>~/.openclaw/skills</code> 目录（绕过限流）</span></li><li><span class="step-dot">3</span><span>切换手机热点或其他网络，用不同 IP 重试</span></li></ul>`},
+  {id:25,cat:"飞书配置",q:"在同一个 OpenClaw 实例下配置多个飞书机器人时，为何第二个机器人会把第一个顶替下线？",a:`<div class="warn-box">⚠️ 多个机器人使用了同一个飞书应用的凭证 — 飞书限制同一应用仅能保持一个实例在线。</div><div class="good-box">✅ 正确做法：为每个智能体单独创建飞书企业自建应用，分别获取各自的 appId 和 appSecret，确保唯一绑定。</div>`},
+  {id:26,cat:"使用技巧",q:"把多个龙虾机器人拉到同一个飞书群里，如何让它们互相 @ 进行工作委派？",a:`<div class="warn-box">⚠️ 飞书群里的机器人互相之间<strong>看不到对方</strong>。此问题目前没有最终确认的解决方案，社群正在研究中。</div>`},
+  {id:27,cat:"使用技巧",q:"头一天设定好的人设和定时任务，断网或重启网关后完全失忆，如何让机器人正确读取 SOUL.md、MEMORY.md？",a:`<div class="good-box">✅ 正常情况下不会出现此问题，配置文件在会话开始时会自动读取。</div><div class="warn-box">⚠️ 若出现失忆，大概率是<strong>重置（reset）</strong>导致配置文件丢失，而不是重启问题，需要重新配置。</div>`},
+  {id:28,cat:"使用技巧",q:"群聊中，如何避免子 Agent 的中间思考过程（如「让我查一下」）泄漏到群里？",a:`<div class="tip-box">💬 直接告诉龙虾：「帮我禁用思考过程的中间输出，只显示最终结果」，它会自动调整配置文件。</div>`},
+  {id:29,cat:"飞书配置",q:"飞书 OpenClaw 机器人可以加入群组吗？",a:`<div class="good-box">✅ <strong>内部群</strong>：直接在「群聊管理 → 机器人」中添加，无限制。</div><div class="warn-box">⚠️ <strong>外部群</strong>：需要企业认证，企业版需管理员开启应用权限。</div>`},
+  {id:30,cat:"飞书配置",q:"如何修改飞书机器人在群内的回复方式（只 @ 回复 / 全部回复 / 指定群回复）？",a:`<p><strong>模式1：只有 @ 才回复</strong></p><div class="code-block"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre>openclaw config set channels.feishu.requireMention true --json</pre></div><p><strong>模式2：所有消息都回复</strong></p><div class="warn-box">⚠️ 大群慎用，容易刷屏！需先开通「获取群组中所有消息（敏感权限）」。</div><div class="code-block"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre>openclaw config set channels.feishu.requireMention false --json</pre></div><p><strong>模式3：指定群 @ 才回复</strong></p><div class="code-block"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre>openclaw config set channels.feishu.requireMention false --json
+openclaw config set channels.feishu.groups.oc_xxxxxxxx.requireMention true --json</pre></div>`},
+  {id:31,cat:"权限问题",q:"为什么开通了读取权限，龙虾机器人还是没有消息输入框？",a:`<ul class="steps"><li><span class="step-dot">1</span><span>确认已添加<strong>机器人权限</strong></span></li><li><span class="step-dot">2</span><span>确认回调里的<strong>事件已开启</strong></span></li><li><span class="step-dot">3</span><span>确认回调里的<strong>长链接已点击配置保存</strong></span></li><li><span class="step-dot">4</span><span>开发者后台 → 权限管理，确认已开通 <code>im:message.p2p_msg:readonly</code></span></li><li><span class="step-dot">5</span><span>确认应用<strong>已发布</strong>，使以上配置生效</span></li></ul>`},
+  {id:32,cat:"API与计费",q:"为什么我只跟龙虾说了十几句话，就限额不让用了？",a:`<div class="warn-box">⚠️ 一句话 ≠ 一条请求。<strong>一条用户指令背后可能触发几十到几百条请求。</strong></div><div class="tip-box">例：9.9 Lite 套餐配额是「5小时内不超过 1200 条请求」，十几句对话很容易达到限额。开启流式输出也会加剧消耗。<br>查看限额：「方舟控制台 → 开通管理」</div>`},
+  {id:33,cat:"报错修复",q:"ArkClaw 重启中，正在尝试重连，超过 2 分钟未恢复，建议自动修复实例",a:`<ul class="steps"><li><span class="step-dot">1</span><span>打开 ArkClaw 右侧「设置」面板</span></li><li><span class="step-dot">2</span><span>点击「重新初始化 ArkClaw」选项</span></li><li><span class="step-dot">3</span><span>等待 1-2 分钟，界面重置后重新配置</span></li></ul><div class="tip-box">也可以选择<strong>重新安装 OpenClaw</strong>。</div>`},
+  {id:34,cat:"使用技巧",q:"龙虾给我发一句话，ArkClaw 网页也发一句，这个是正常的吗？",a:`<div class="good-box">✅ 正常。Channel（飞书等渠道）和 Web UI 的对话是同步的，飞书里私聊对应 <code>agent:main:main</code>，两端消息互通是预期行为。</div>`},
+  {id:35,cat:"报错修复",q:"龙虾隔一会就给我发配对码，是什么情况，如何解决？",a:`<ul class="steps"><li><span class="step-dot">1</span><span>先重启网关：告诉龙虾「重启下网关」，或执行 <code>openclaw gateway restart</code></span></li><li><span class="step-dot">2</span><span>如果恢复正常就好了</span></li><li><span class="step-dot">3</span><span>如果还不正常，重新配置飞书渠道</span></li></ul>`},
+  {id:36,cat:"飞书配置",q:"创建飞书机器人后，发现机器人界面没有聊天输入框，也看不到配对码",a:`<ul class="steps"><li><span class="step-dot">1</span><span>确认应用<strong>已发布</strong>（不是「草稿」或「审核中」）</span></li><li><span class="step-dot">2</span><span>确认消息渠道配置完整：App ID、App Secret、事件订阅、消息渠道 四项都要配</span></li><li><span class="step-dot">3</span><span>确认 Gateway 在运行：<code>systemctl status --user openclaw-gateway.service</code></span></li><li><span class="step-dot">4</span><span>在飞书给机器人发 <code>/feishu auth</code>，正常会回复含 pairing approve 的配对信息</span></li></ul><div class="warn-box">⚠️ 若仍无配对码，说明前面链路没打通，优先排查：应用未发布、事件订阅没配好、Gateway 未启动。</div>`},
+  {id:37,cat:"权限问题",q:"遇到反复授权请求怎么处理？ArkClaw 总是反复弹出授权请求",a:`<ul class="steps"><li><span class="step-dot">1</span><span>飞书开放平台 → 你的应用 → 权限管理 → 搜索所需权限 → 「开通/添加」</span></li><li><span class="step-dot">2</span><span>权限添加后必须点击「申请发布」或「全员可见」，<strong>否则权限不生效</strong></span></li><li><span class="step-dot">3</span><span>确认「可用权限」和「已开通权限」两栏都有对应权限</span></li></ul><div class="good-box">⚡ 一次性完成所有授权：直接给 ArkClaw 发「<strong>我想获取所有权限</strong>」</div>`},
+  {id:38,cat:"报错修复",q:"为什么总报错：Agent failed before reply: No API key found for provider \"anthropic\"？",a:`<div class="warn-box">⚠️ 本地安装时认证配置错误，小白建议跟着教程「立省 500！30 分钟把 OpenClaw 在飞书上配到可用」重新安装走一遍。</div><div class="tip-box">也可参考 GitHub Issues #19961 或 #5181</div>`},
+  {id:39,cat:"报错修复",q:"配置 OpenClaw 时报错 404 The model or endpoint xxx does not exist or you do not have access to it",a:`<ul class="steps"><li><span class="step-dot">1</span><span>检查两个配置文件的 baseurl 是否一致：<code>~/.openclaw/openclaw.json</code>（全局）和 <code>~/.openclaw/agents/main/agent/models.json</code>（<strong>优先级更高</strong>）</span></li><li><span class="step-dot">2</span><span>两者不一致时，先删除 <code>~/.openclaw/agents/main/agent/models.json</code></span></li><li><span class="step-dot">3</span><span>重新配置 openclaw.json，保存后执行 <code>openclaw gateway restart</code></span></li></ul>`},
+  {id:40,cat:"权限问题",q:"创建龙虾提示「暂无创建 ArkClaw 的权限，请确认账号是否拥有绑定了 ECSClawRolePolicy 策略的 ECSClawRole 角色」",a:`<p>原因：<strong>子账号没有充分授权。</strong></p><ul class="steps"><li><span class="step-dot">1</span><span>创建独立的<strong>主账号</strong></span></li><li><span class="step-dot">2</span><span>前往访问控制，添加 <code>ECSClawRole</code> 角色</span></li><li><span class="step-dot">3</span><span>绑定 <code>ECSClawRolePolicy</code> 策略</span></li></ul>`},
+  {id:41,cat:"报错修复",q:"ArkClaw 重启中，正在尝试重连；若超过 2 分钟未恢复，建议自动修复实例（同 #33）",a:`<div class="tip-box">💡 参考第 33 题的解决方案：使用「重新初始化 ArkClaw」按钮，或重新安装 OpenClaw。</div>`},
+  {id:42,cat:"安装部署",q:"报错 Command Line Tools (CLT) are missing，必须先安装 CLT 才能安装 Homebrew",a:`<div class="code-block"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre>xcode-select --install   # 安装 CLT
+xcode-select -p          # 验证安装成功</pre></div><p>按提示完成安装后，重新运行安装包即可。</p>`},
+  {id:43,cat:"报错修复",q:"报错「无法获取用户身份，请在飞书对话中使用此命令」",a:`<div class="code-block"><button class="copy-btn" onclick="copyCode(this)">复制</button><pre>openclaw channels list         # 检查是否 Auth providers: none
+feishu-plugin-onboard install  # 安装飞书插件
+openclaw gateway restart       # 重启网关</pre></div><div class="tip-box">最后返回飞书机器人聊天页面，输入 <code>/feishu auth</code> 授权即可。</div>`},
+  {id:44,cat:"报错修复",q:"报错「抱歉，你的消息因安全策略被拦截了，请修改内容后重新提交」",a:`<div class="good-box">✅ 方法1：修改消息内容，去除可能被判定为敏感的信息</div><div class="good-box">✅ 方法2：更换大模型，在 CodePlan 页面手动切换，「方舟控制台 → 开通管理」可查看可用模型</div>`},
+  {id:45,cat:"权限问题",q:"龙虾机器人各种权限不足问题，怎么快速解决？",a:`<div class="good-box">⚡ 最快方式：直接告诉 AI：「<strong>我想授予所有用户权限</strong>」<br>ArkClaw 会一次性完成所有飞书工具权限的授予，无需逐项手动开通。</div>`}
+];
+
+// ── 状态 ──
+let curCat='全部', curKw='', curId=null;
+let filteredList=[];
+
+// ── 工具 ──
+function hl(text,kw){
+  if(!kw) return text;
+  const esc=kw.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  return text.replace(new RegExp(esc,'gi'),m=>`<mark>${m}</mark>`);
+}
+
+// ── 列表渲染 ──
+function render(){
+  const kw=curKw.trim().toLowerCase();
+  filteredList=QA.filter(item=>{
+    const catOk=curCat==='全部'||item.cat===curCat;
+    const kwOk=!kw||item.q.toLowerCase().includes(kw)||item.a.toLowerCase().includes(kw);
+    return catOk&&kwOk;
+  });
+
+  const bar=document.getElementById('resultBar');
+  bar.innerHTML=filteredList.length
+    ?`找到 <strong>${filteredList.length}</strong> 个结果${kw?'，关键词：<strong>'+curKw+'</strong>':''}`
+    :'';
+
+  const list=document.getElementById('qaList');
+  if(!filteredList.length){
+    list.innerHTML=`<div class="empty"><div class="ei">🦞</div>没找到相关问题，换个关键词试试？</div>`;
+    return;
+  }
+
+  const showGroup=curCat==='全部'&&!kw;
+  const groups={};
+  filteredList.forEach(item=>{
+    if(!groups[item.cat]) groups[item.cat]=[];
+    groups[item.cat].push(item);
+  });
+
+  let html='';
+  if(showGroup){
+    Object.entries(groups).forEach(([cat,items])=>{
+      html+=`<div class="section-label">${cat}</div>`;
+      items.forEach(item=>html+=rowHtml(item));
+    });
+  } else {
+    filteredList.forEach(item=>html+=rowHtml(item));
+  }
+  list.innerHTML=html;
+}
+
+function rowHtml(item){
+  return `<div class="qa-row" onclick="openDetail(${item.id})">
+    <div class="qa-num-wrap"><span class="qa-num">${item.id}</span></div>
+    <div class="qa-mid">
+      <span class="qa-cat-tag">${item.cat}</span>
+      <div class="qa-q-text">${hl(item.q,curKw)}</div>
+    </div>
+    <span class="qa-chevron">›</span>
+  </div>`;
+}
+
+// ── 详情页 ──
+function openDetail(id){
+  curId=id;
+  const item=QA.find(q=>q.id===id);
+  if(!item) return;
+  document.getElementById('detailNavTitle').textContent=`Q${item.id} · ${item.cat}`;
+  document.getElementById('detailNum').textContent=`Q${item.id}`;
+  document.getElementById('detailCat').textContent=item.cat;
+  document.getElementById('detailQ').textContent=item.q;
+  document.getElementById('detailA').innerHTML=item.a;
+  const idx=filteredList.findIndex(q=>q.id===id);
+  document.getElementById('prevBtn').disabled=idx<=0;
+  document.getElementById('nextBtn').disabled=idx>=filteredList.length-1;
+  document.getElementById('pages').classList.add('on-detail');
+  document.getElementById('detailPage').scrollTop=0;
+  window.scrollTo(0,0);
+}
+
+function goBack(){
+  document.getElementById('pages').classList.remove('on-detail');
+}
+
+function navItem(dir){
+  const idx=filteredList.findIndex(q=>q.id===curId);
+  const next=filteredList[idx+dir];
+  if(next) openDetail(next.id);
+}
+
+function copyCode(btn){
+  const code=btn.nextElementSibling.innerText;
+  navigator.clipboard.writeText(code).then(()=>{
+    btn.textContent='已复制 ✓';
+    setTimeout(()=>btn.textContent='复制',1500);
+  }).catch(()=>{ btn.textContent='失败'; });
+}
+
+function clearSearch(){
+  document.getElementById('searchInput').value='';
+  curKw='';
+  document.getElementById('clearBtn').classList.remove('show');
+  render();
+}
+
+// ── 主 Tab 切换 ──
+document.getElementById('mainTabs').addEventListener('click',e=>{
+  const tab=e.target.closest('.main-tab');
+  if(!tab) return;
+  const t=tab.dataset.tab;
+  document.querySelectorAll('.main-tab').forEach(el=>el.classList.toggle('active',el.dataset.tab===t));
+  document.querySelectorAll('.tab-content').forEach(el=>el.classList.toggle('active',el.id==='tab-'+t));
+});
+
+// ── 分类胶囊 ──
+document.getElementById('cats').addEventListener('click',e=>{
+  const pill=e.target.closest('.cat-pill');
+  if(!pill) return;
+  curCat=pill.dataset.cat;
+  document.querySelectorAll('.cat-pill').forEach(p=>p.classList.toggle('active',p.dataset.cat===curCat));
+  render();
+});
+
+// ── 搜索 ──
+document.getElementById('searchInput').addEventListener('input',e=>{
+  curKw=e.target.value;
+  document.getElementById('clearBtn').classList.toggle('show',curKw.length>0);
+  render();
+});
+
+render();
+</script>
+</body>
+</html>
